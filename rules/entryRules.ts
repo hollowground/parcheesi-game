@@ -1,0 +1,54 @@
+import { GameState } from "../types/GameState"
+import { Move } from "../types/Move"
+import { ENTRY_INDEX } from "../constants/board"
+
+export function getEntryMoves(state: GameState): Move[] {
+
+  const moves: Move[] = []
+
+  // must roll a 5
+  if (!state.dice.includes(5)) {
+    return moves
+  }
+
+  console.log(`Die is ${state.dice[0]}, checking entry moves`)
+
+  const entryIndex = ENTRY_INDEX[state.currentPlayer]
+  console.log(`Entry index for player ${state.currentPlayer}: ${entryIndex}`)
+
+  // pawns currently on the entry square
+  const entryOccupants = state.pawns.filter(p =>
+    p.position.type === "track" &&
+    p.position.index === entryIndex
+  )
+
+  const occupantCount = entryOccupants.length
+  console.log(`Entry square has ${occupantCount} occupants`)
+
+  // square full (blockade)
+  if (occupantCount >= 2) {
+    return moves
+  }
+
+  // pawns in start
+  const startPawns = state.pawns.filter(p =>
+    p.player === state.currentPlayer &&
+    p.position.type === "start"
+  )
+
+  // only allow remaining capacity
+  const capacity = 2 - occupantCount
+  const allowed = startPawns.slice(0, capacity)
+
+  for (const pawn of allowed) {
+    moves.push({
+      pawnId: pawn.id,
+      from: pawn.position,
+      to: { type: "track", index: entryIndex },
+      die: 5,
+      enterFromStart: true
+    })
+  }
+
+  return moves
+}

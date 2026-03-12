@@ -1,0 +1,287 @@
+Parcheesi Rule Test Matrix
+1. Game Setup
+RULE-SETUP-001 — Initial Pawn Placement
+
+Rule:
+Each player begins with 4 pawns in Start.
+
+Tests
+
+Game initialization creates 4 pawns per player.
+
+All pawns begin in START.
+
+No pawns on track at game start.
+
+RULE-SETUP-002 — Starting Player Selection
+
+Rule:
+Players roll dice to determine starting order.
+
+Tests
+
+Highest roll becomes first player.
+
+Ties require reroll.
+
+(This may be handled outside the engine if UI controls seating.)
+
+2. Dice Rolling
+RULE-DICE-001 — Two Dice Rolled
+
+Rule:
+Each turn uses two dice.
+
+Tests
+
+Engine produces two dice values.
+
+Values are between 1–6.
+
+RULE-DICE-002 — Dice Must Be Used If Possible
+
+Rule:
+Players must use both dice if legal moves exist.
+
+Tests
+
+If both dice can move → both must be used.
+
+If only one die can move → player may use that one.
+
+RULE-DICE-003 — Doubles Grant Bonus
+
+Rule:
+Rolling doubles grants two additional dice moves.
+
+Tests
+
+Dice [3,3] produces 4 moves of value 3.
+
+RULE-DICE-004 — Dice May Be Used In Any Order
+
+Rule:
+Dice rolled can be used in any order with different pawns
+
+Tests
+
+Pawn can move using either die first.
+Engine generates both move sequences.
+
+Engine tracks 4 dice uses.
+
+3. Entering From Start
+RULE-ENTRY-001 — Entering Requires 5
+
+Rule:
+A pawn may leave Start only with a roll of 5.
+
+Tests
+
+Pawn enters when die=5.
+
+Pawn cannot enter with any other die.
+
+RULE-ENTRY-002 — Entry Square Blocked
+
+Rule:
+Pawn cannot enter if entry square contains opponent blockade.
+
+Tests
+
+Blockade prevents entry.
+
+Single opponent pawn does NOT prevent entry.
+
+RULE-ENTRY-003 — Entry Capture
+
+Rule:
+Entering pawn captures opponent pawn on entry square.
+
+Tests
+
+Opponent pawn sent to Start.
+
+4. Pawn Movement
+RULE-MOVE-001 — Pawn Moves Forward Only
+
+Rule:
+Pawns move forward along track.
+
+Tests
+
+Pawn cannot move backward.
+
+RULE-MOVE-002 — Exact Die Movement
+
+Rule:
+Pawn must move exact die distance.
+
+Tests
+
+Pawn moves exactly N squares.
+
+RULE-MOVE-003 — Passing Blockades
+
+Rule:
+Pawns cannot pass blockades.
+
+Tests
+
+Movement stops before blockade.
+
+Move is illegal if path crosses blockade.
+
+RULE-MOVE-004 — Landing On Own Pawn
+
+Rule:
+Landing on your pawn creates a blockade.
+
+Tests
+
+Two same-color pawns create blockade.
+
+5. Blockades
+RULE-BLOCKADE-001 — Blockade Definition
+
+Rule:
+Two pawns of the same player occupy one square.
+
+Tests
+
+Engine detects blockade state.
+
+RULE-BLOCKADE-002 — Cannot Pass Blockade
+
+Rule:
+No pawn may pass blockade.
+
+Tests
+
+Move generator prevents crossing.
+
+RULE-BLOCKADE-003 — Must Break Blockade If Possible
+
+Rule:
+If a move can break a blockade it must be considered.
+
+Tests
+
+Engine generates moves that break blockade.
+
+6. Capturing
+RULE-CAPTURE-001 — Capture On Track
+
+Rule:
+Landing on opponent pawn captures it.
+
+Tests
+
+Opponent pawn sent to Start.
+
+RULE-CAPTURE-002 — No Capture On Safety Squares
+
+Rule:
+Safety squares prevent capture.
+
+Tests
+
+Opponent pawn remains.
+
+RULE-CAPTURE-003 — Capture Bonus
+
+Rule:
+Capture grants 20 bonus movement.
+
+Tests
+
+Bonus move added.
+
+7. Safety Squares
+RULE-SAFETY-001 — Safety Squares Cannot Be Captured
+
+Tests
+
+Capture attempt rejected.
+
+RULE-SAFETY-002 — Multiple Pawns Allowed
+
+Tests
+
+Pawns can stack safely.
+
+8. Home Entry
+RULE-HOME-001 — Must Reach Entry Square
+
+Rule:
+Pawn enters home path only after reaching entry.
+
+Tests
+
+Pawn transitions from track → home lane.
+
+RULE-HOME-002 — Exact Roll Required
+
+Rule:
+Exact die needed to reach home.
+
+Tests
+
+Pawn cannot overshoot.
+
+9. Finishing
+RULE-FINISH-001 — Pawn Reaches Home
+
+Rule:
+Pawn removed from board when reaching home.
+
+Tests
+
+Pawn state becomes FINISHED.
+
+RULE-FINISH-002 — Finish Bonus
+
+Rule:
+Finishing grants 10 bonus movement.
+
+Tests
+
+Bonus added.
+
+10. Turn Completion
+RULE-TURN-001 — Turn Ends When Dice Used
+
+Tests
+
+Turn transitions to next player.
+
+RULE-TURN-002 — No Legal Moves Ends Turn
+
+Tests
+
+Turn auto passes.
+
+11. Win Condition
+RULE-WIN-001 — Player Wins When All Pawns Finish
+
+Tests
+
+Game ends.
+
+Complete Test Coverage Count
+Category	Rules	Tests Needed
+Setup	2	3–4
+Dice	3	6–8
+Entry	3	6–8
+Movement	4	8–10
+Blockades	3	5–6
+Captures	3	5–6
+Safety	2	3–4
+Home	2	3–4
+Finish	2	3–4
+Turn	2	3–4
+Win	1	1
+
+Total expected tests: ~50–60
+
+Professional engines often end up with 80–120 tests after edge cases.
