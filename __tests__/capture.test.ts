@@ -69,27 +69,30 @@ describe("Capturing Rules", () => {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
 
-            dice: [3],
+            dice: [5],
             usedDice: [],
 
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 2 } },
-                { id: 1, player: "blue", position: { type: "track", index: 5 } }
+                { id: 1, player: "blue", position: { type: "track", index: 7 } }
             ]
         }
-
-        // Later we'll mark index 5 as a safety square
 
         const moves = getLegalMoves(state)
 
         const move = moves.find(
             m => m.pawnId === 0 &&
                 m.to.type === "track" &&
-                m.to.index === 5
+                m.to.index === 7
         )
 
         expect(move).toBeDefined()
 
+        const newState = applyMove(state, move!)
+
+        const bluePawn = newState.pawns.find(p => p.id === 1)
+
+        expect(bluePawn?.position).toEqual({ type: "track", index: 7 })
     })
 
 

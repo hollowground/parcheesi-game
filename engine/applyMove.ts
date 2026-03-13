@@ -1,6 +1,6 @@
 import { GameState } from "../types/GameState"
 import { Move } from "../types/Move"
-import { getEnemyPawnsOnSquare } from "../engine/boardUtils"
+import { getEnemyPawnsOnSquare, isSafeSquare } from "../engine/boardUtils"
 
 export function applyMove(state: GameState, move: Move): GameState {
 
@@ -19,11 +19,22 @@ export function applyMove(state: GameState, move: Move): GameState {
     if (move.to.type === "track") {
 
         const destinationIndex = move.to.index
+        console.log(`Pawn ${pawn.id} moved to track index ${destinationIndex}`)
+        console.log(`Is this a safe square? ${isSafeSquare(destinationIndex)}`)
 
-        const enemies = getEnemyPawnsOnSquare(newState, destinationIndex, pawn.player)
+        if (!isSafeSquare(destinationIndex)) {
 
-        for (const enemy of enemies) {
-            enemy.position = { type: "start" }
+            const enemies = getEnemyPawnsOnSquare(
+                newState,
+                destinationIndex,
+                pawn.player
+            )
+            console.log(`Enemies on destination square: ${enemies.map(e => e.id).join(", ")}`)
+
+            for (const enemy of enemies) {
+                enemy.position = { type: "start" }
+            }
+
         }
 
     }

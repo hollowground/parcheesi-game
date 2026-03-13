@@ -1,4 +1,10 @@
 import { GameState } from "../types/GameState"
+import { SAFETY_SQUARES } from "./boardConfig"
+
+
+export function isSafeSquare(index: number) {
+    return SAFETY_SQUARES.includes(index)
+}
 
 export function getPawnsOnSquare(state: GameState, index: number) {
     return state.pawns.filter(
