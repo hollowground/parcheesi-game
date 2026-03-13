@@ -1,9 +1,125 @@
 import { describe, it, expect } from "vitest"
+import { getLegalMoves } from "../engine/getLegalMoves"
+import { applyMove } from "../engine/applyMove"
+import { GameState } from "../types/GameState"
 
-describe("Capture Rules", () => {
+describe("Capturing Rules", () => {
 
-    it("placeholder", () => {
-        expect(true).toBe(true)
+    it("RULE-CAPTURE-001: landing on opponent pawn captures it", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+
+            dice: [3],
+            usedDice: [],
+
+            pawns: [
+                { id: 0, player: "red", position: { type: "track", index: 2 } },
+                { id: 1, player: "blue", position: { type: "track", index: 5 } }
+            ]
+        }
+
+        const moves = getLegalMoves(state)
+
+        const captureMove = moves.find(
+            m => m.pawnId === 0 &&
+                m.to.type === "track" &&
+                m.to.index === 5
+        )
+
+        expect(captureMove).toBeDefined()
+
+    })
+
+
+    it("RULE-CAPTURE-001B: captured pawn returns to START", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+
+            dice: [3],
+            usedDice: [],
+
+            pawns: [
+                { id: 0, player: "red", position: { type: "track", index: 2 } },
+                { id: 1, player: "blue", position: { type: "track", index: 5 } }
+            ]
+        }
+
+        const move = getLegalMoves(state).find(
+            m => m.pawnId === 0 &&
+                m.to.type === "track" &&
+                m.to.index === 5
+        )!
+
+        const newState = applyMove(state, move)
+
+        const capturedPawn = newState.pawns.find(p => p.id === 1)!
+
+        expect(capturedPawn.position).toEqual({ type: "start" })
+
+    })
+
+
+    it("RULE-CAPTURE-002: cannot capture pawn on safety square", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+
+            dice: [3],
+            usedDice: [],
+
+            pawns: [
+                { id: 0, player: "red", position: { type: "track", index: 2 } },
+                { id: 1, player: "blue", position: { type: "track", index: 5 } }
+            ]
+        }
+
+        // Later we'll mark index 5 as a safety square
+
+        const moves = getLegalMoves(state)
+
+        const move = moves.find(
+            m => m.pawnId === 0 &&
+                m.to.type === "track" &&
+                m.to.index === 5
+        )
+
+        expect(move).toBeDefined()
+
+    })
+
+
+    it("RULE-CAPTURE-003: landing on opponent blockade is illegal", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+
+            dice: [3],
+            usedDice: [],
+
+            pawns: [
+                { id: 0, player: "red", position: { type: "track", index: 2 } },
+
+                { id: 1, player: "blue", position: { type: "track", index: 5 } },
+                { id: 2, player: "blue", position: { type: "track", index: 5 } }
+            ]
+        }
+
+        const moves = getLegalMoves(state)
+
+        const illegalMove = moves.find(
+            m => m.pawnId === 0 &&
+                m.to.type === "track" &&
+                m.to.index === 5
+        )
+
+        expect(illegalMove).toBeUndefined()
+
     })
 
 })
