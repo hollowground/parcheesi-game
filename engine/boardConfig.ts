@@ -18,13 +18,22 @@ export const HOME_ENTRY_INDEX: Record<PlayerColor, number> = {
 }
 
 export const SAFETY_SQUARES = [
-    0,   // red entry
+    ENTRY_INDEX.red,   // red entry
     7,
     12,
-    17,  // blue entry
+    ENTRY_INDEX.blue,  // blue entry
     24,
     29,
-    34,  // yellow entry
+    ENTRY_INDEX.yellow,  // yellow entry
     41,
-    46   // green entry
+    ENTRY_INDEX.green   // green entry
+]
+
+export const START_OFFSET = 5
+
+export const PLAYER_ORDER: PlayerColor[] = [
+    "red",
+    "blue",
+    "yellow",
+    "green"
 ]

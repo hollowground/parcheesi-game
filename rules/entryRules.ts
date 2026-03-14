@@ -1,6 +1,6 @@
 import { GameState } from "../types/GameState"
 import { Move } from "../types/Move"
-import { ENTRY_INDEX } from "../constants/board"
+import { ENTRY_INDEX } from "../engine/boardConfig"
 
 export function getEntryMoves(state: GameState): Move[] {
 
@@ -35,10 +35,13 @@ export function getEntryMoves(state: GameState): Move[] {
     p.player === state.currentPlayer &&
     p.position.type === "start"
   )
+  console.log(`Player has ${startPawns.length} pawns in start`) 
 
   // only allow remaining capacity
   const capacity = 2 - occupantCount
+  console.log(`Entry square capacity: ${capacity}`)
   const allowed = startPawns.slice(0, capacity)
+  console.log(`Allowed pawns to enter: ${allowed.map(p => p.id).join(", ")}`)
 
   for (const pawn of allowed) {
     moves.push({

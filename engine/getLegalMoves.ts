@@ -3,7 +3,7 @@ import { Move } from "../types/Move"
 
 import { getEntryMoves } from "../rules/entryRules"
 import { getMovementMoves } from "../rules/movementRules"
-import { ENTRY_INDEX } from "../constants/board"
+import { ENTRY_INDEX } from "./boardConfig"
 
 export function getLegalMoves(state: GameState): Move[] {
 
