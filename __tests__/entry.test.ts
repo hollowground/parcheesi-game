@@ -30,7 +30,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
                 m =>
                     m.pawnId === 0 &&
                     m.to.type === "track" &&
-                    m.to.index === 0
+                    m.to.index === ENTRY_INDEX.red
             )
         ).toBe(true)
     })
@@ -55,7 +55,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         expect(moves.length).toBe(0)
     })
 
-    it("RULE-ENTRY-001: multiple pawns in start generate multiple entry moves", () => {
+    it("RULE-ENTRY-001: entry square capacity limits entry moves to two", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
@@ -98,7 +98,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
     })
 
-    it("RULE-ENTRY-002: entry is blocked if two pawns occupy the entry square (blockade)", () => {
+    it("RULE-ENTRY-002: entry is blocked if two same player's pawns occupy the entry square (blockade)", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
@@ -111,6 +111,28 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
                 { id: 2, player: "red", position: { type: "track", index: ENTRY_INDEX.red } },
                 { id: 3, player: "red", position: { type: "track", index: ENTRY_INDEX.red } }
+            ]
+        }
+
+        const moves = getLegalMoves(state)
+
+        expect(moves.length).toBe(0)
+
+    })
+
+    it("RULE-ENTRY-002: entry is blocked if two enemy pawns occupy the entry square (blockade)", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+            dice: [5],
+            usedDice: [],
+            pawns: [
+                { id: 0, player: "red", position: { type: "start" } },
+                { id: 1, player: "red", position: { type: "start" } },
+
+                { id: 2, player: "blue", position: { type: "track", index: ENTRY_INDEX.red } },
+                { id: 3, player: "blue", position: { type: "track", index: ENTRY_INDEX.red } }
             ]
         }
 

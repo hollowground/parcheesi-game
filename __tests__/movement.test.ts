@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { getLegalMoves } from "../engine/getLegalMoves"
 import { GameState } from "../types/GameState"
+import { ENTRY_INDEX } from "../engine/boardConfig"
 
 describe("Movement Rules (RULE-MOVE)", () => {
 
@@ -12,7 +13,7 @@ describe("Movement Rules (RULE-MOVE)", () => {
             dice: [3],
             usedDice: [],
             pawns: [
-                { id: 0, player: "red", position: { type: "track", index: 0 } },
+                { id: 0, player: "red", position: { type: "track", index: 10 } },
 
                 { id: 1, player: "red", position: { type: "start" } },
                 { id: 2, player: "blue", position: { type: "start" } },
@@ -30,7 +31,7 @@ describe("Movement Rules (RULE-MOVE)", () => {
 
         expect(move.to).toEqual({
             type: "track",
-            index: 3
+            index: 13
         })
 
     })
@@ -101,6 +102,54 @@ describe("Movement Rules (RULE-MOVE)", () => {
             type: "track",
             index: 15
         })
+
+    })
+
+    it("RULE-MOVE-005: pawn cannot pass a blockade", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+            dice: [4],
+            usedDice: [],
+            pawns: [
+
+                { id: 0, player: "red", position: { type: "track", index: 10 } },
+
+                { id: 1, player: "blue", position: { type: "track", index: 12 } },
+                { id: 2, player: "blue", position: { type: "track", index: 12 } }
+
+            ]
+        }
+
+        const moves = getLegalMoves(state)
+
+        expect(moves.length).toBe(0)
+
+    })
+
+    it("RULE-MOVE-006: pawn cannot land on its own blockade", () => {
+
+        const state: GameState = {
+            players: ["red", "blue", "yellow", "green"],
+            currentPlayer: "red",
+            dice: [2],
+            usedDice: [],
+            pawns: [
+
+                { id: 0, player: "red", position: { type: "track", index: 10 } },
+
+                { id: 1, player: "red", position: { type: "track", index: 12 } },
+                { id: 2, player: "red", position: { type: "track", index: 12 } }
+
+            ]
+        }
+
+        const moves = getLegalMoves(state)
+
+        expect(moves.length).toBe(2)
+        const pawnExists = moves.some(move => move.pawnId === 0)
+        expect(pawnExists).toBe(false)
 
     })
 

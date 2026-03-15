@@ -1,9 +1,8 @@
 import { GameState } from "../types/GameState"
 import { Move } from "../types/Move"
+import { getEnemyPawnsOnSquare, getPawnsOnSquare, isSafeSquare } from "../engine/boardUtils"
+import { TRACK_LENGTH } from "../engine/boardConfig"
 
-import { getPawnsOnSquare } from "../engine/boardUtils"
-
-const TRACK_LENGTH = 68
 
 export function getMovementMoves(state: GameState): Move[] {
 
@@ -47,11 +46,13 @@ export function getMovementMoves(state: GameState): Move[] {
             // cannot land on ANY blockade
             if (occupants.length >= 2) continue
 
+            const enemies = getEnemyPawnsOnSquare(state, destination, pawn.player)
             moves.push({
                 pawnId: pawn.id,
                 from: pawn.position,
                 to: { type: "track", index: destination },
-                die
+                die,
+                capture: enemies.length > 0 && !isSafeSquare(destination)
             })
 
         }

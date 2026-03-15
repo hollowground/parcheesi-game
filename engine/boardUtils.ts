@@ -1,4 +1,4 @@
-import { GameState } from "../types/GameState"
+import { GameState, PlayerColor } from "../types/GameState"
 import { SAFETY_SQUARES } from "./boardConfig"
 
 
@@ -34,7 +34,7 @@ export function getBlockadeOwner(state: GameState, index: number) {
 export function getEnemyPawnsOnSquare(
     state: GameState,
     index: number,
-    player: string
+    player: PlayerColor
 ) {
     return getPawnsOnSquare(state, index).filter(
         p => p.player !== player
