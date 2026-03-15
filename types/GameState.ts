@@ -21,5 +21,8 @@ export interface GameState {
     dice: number[]
     usedDice: number[]
 
+    bonusMoves: number[]
+    consecutiveDoubles: number
+
     winner?: PlayerColor
 }

@@ -20,7 +20,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
                 { id: 1, player: "red", position: { type: "start" } },
                 { id: 2, player: "red", position: { type: "start" } },
                 { id: 3, player: "red", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -47,7 +49,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
                 { id: 1, player: "red", position: { type: "start" } },
                 { id: 2, player: "red", position: { type: "start" } },
                 { id: 3, player: "red", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -67,7 +71,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
                 { id: 1, player: "red", position: { type: "start" } },
                 { id: 2, player: "red", position: { type: "start" } },
                 { id: 3, player: "red", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -89,7 +95,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
                 { id: 2, player: "blue", position: { type: "start" } },
                 { id: 3, player: "blue", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -111,7 +119,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
                 { id: 2, player: "red", position: { type: "track", index: ENTRY_INDEX.red } },
                 { id: 3, player: "red", position: { type: "track", index: ENTRY_INDEX.red } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -133,7 +143,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
                 { id: 2, player: "blue", position: { type: "track", index: ENTRY_INDEX.red } },
                 { id: 3, player: "blue", position: { type: "track", index: ENTRY_INDEX.red } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -156,7 +168,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
                 { id: 2, player: "blue", position: { type: "start" } },
                 { id: 3, player: "blue", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -176,7 +190,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
                 { id: 0, player: "red", position: { type: "start" } },
 
                 { id: 1, player: "blue", position: { type: "track", index: ENTRY_INDEX.red } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)

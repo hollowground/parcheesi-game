@@ -37,6 +37,9 @@ describe("Movement Rules - Own Blockade", () => {
                 }
             ],
             players: ["red", "blue", "yellow", "green"],
+            bonusMoves: [],
+            consecutiveDoubles: 0
+        
         }
 
         const moves = getLegalMoves(state)

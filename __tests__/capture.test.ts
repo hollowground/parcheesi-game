@@ -18,7 +18,9 @@ describe("Capturing Rules", () => {
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 2 } },
                 { id: 1, player: "blue", position: { type: "track", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -47,7 +49,9 @@ describe("Capturing Rules", () => {
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 2 } },
                 { id: 1, player: "blue", position: { type: "track", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const move = getLegalMoves(state).find(
@@ -77,7 +81,9 @@ describe("Capturing Rules", () => {
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 2 } },
                 { id: 1, player: "blue", position: { type: "track", index: 7 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const safeSquare = SAFETY_SQUARES[1]
@@ -115,7 +121,9 @@ describe("Capturing Rules", () => {
 
                 { id: 1, player: "blue", position: { type: "track", index: 5 } },
                 { id: 2, player: "blue", position: { type: "track", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -144,7 +152,9 @@ describe("Capturing Rules", () => {
 
                 { id: 1, player: "blue", position: { type: "track", index: 7 } },
                 { id: 2, player: "blue", position: { type: "track", index: 7 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)

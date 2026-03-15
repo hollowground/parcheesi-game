@@ -15,7 +15,9 @@ describe("Home Lane Rules (RULE-HOME)", () => {
 
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 62 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -38,7 +40,9 @@ describe("Home Lane Rules (RULE-HOME)", () => {
 
             pawns: [
                 { id: 0, player: "red", position: { type: "homeLane", index: 2 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -61,7 +65,9 @@ describe("Home Lane Rules (RULE-HOME)", () => {
 
             pawns: [
                 { id: 0, player: "red", position: { type: "homeLane", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -81,7 +87,9 @@ describe("Home Lane Rules (RULE-HOME)", () => {
 
             pawns: [
                 { id: 0, player: "red", position: { type: "homeLane", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)

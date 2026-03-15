@@ -18,7 +18,9 @@ describe("Movement Rules (RULE-MOVE)", () => {
                 { id: 1, player: "red", position: { type: "start" } },
                 { id: 2, player: "blue", position: { type: "start" } },
                 { id: 3, player: "blue", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -45,7 +47,9 @@ describe("Movement Rules (RULE-MOVE)", () => {
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 66 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -66,7 +70,9 @@ describe("Movement Rules (RULE-MOVE)", () => {
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 10 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -91,7 +97,9 @@ describe("Movement Rules (RULE-MOVE)", () => {
             usedDice: [2],
             pawns: [
                 { id: 0, player: "red", position: { type: "track", index: 10 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -119,7 +127,9 @@ describe("Movement Rules (RULE-MOVE)", () => {
                 { id: 1, player: "blue", position: { type: "track", index: 12 } },
                 { id: 2, player: "blue", position: { type: "track", index: 12 } }
 
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -142,7 +152,9 @@ describe("Movement Rules (RULE-MOVE)", () => {
                 { id: 1, player: "red", position: { type: "track", index: 12 } },
                 { id: 2, player: "red", position: { type: "track", index: 12 } }
 
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)

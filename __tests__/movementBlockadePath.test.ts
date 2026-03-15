@@ -31,7 +31,9 @@ describe("Movement Rules - Blockade Path", () => {
                     position: { type: "track", index: 12 }
                 }
             ],
-            players: []
+            players: [],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
