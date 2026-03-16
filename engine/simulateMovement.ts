@@ -51,7 +51,7 @@ function getNextPosition(
 
         const next = pos.index + 1
 
-        if (next === HOME_LENGTH - 1) {
+        if (next === HOME_LENGTH) {
             return { type: "home" }
         }
 

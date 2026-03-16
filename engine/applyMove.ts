@@ -31,11 +31,29 @@ export function applyMove(state: GameState, move: Move): GameState {
             )
             console.log(`Enemies on destination square: ${enemies.map(e => e.id).join(", ")}`)
 
-            for (const enemy of enemies) {
-                enemy.position = { type: "start" }
+            if (enemies.length > 0) {
+
+                for (const enemy of enemies) {
+                    enemy.position = { type: "start" }
+                }
+
+                // capture bonus
+                newState.bonusMoves.push(20)
+
             }
 
         }
+
+    }
+    /*
+    -----------------------
+    HOME BONUS
+    -----------------------
+    */
+
+    if (move.to.type === "home") {
+
+        newState.bonusMoves.push(10)
 
     }
 
