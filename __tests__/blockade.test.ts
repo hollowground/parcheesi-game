@@ -17,7 +17,9 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
 
                 { id: 2, player: "blue", position: { type: "track", index: 2 } },
                 { id: 3, player: "blue", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -38,7 +40,9 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
 
                 { id: 1, player: "blue", position: { type: "track", index: 4 } },
                 { id: 2, player: "blue", position: { type: "track", index: 4 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -65,7 +69,9 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
                 { id: 2, player: "red", position: { type: "track", index: 5 } },
 
                 { id: 3, player: "blue", position: { type: "start" } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -91,7 +97,9 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
 
                 { id: 1, player: "blue", position: { type: "track", index: 5 } },
                 { id: 2, player: "blue", position: { type: "track", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
@@ -112,7 +120,9 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
                 { id: 0, player: "red", position: { type: "track", index: 2 } },
 
                 { id: 1, player: "blue", position: { type: "track", index: 5 } }
-            ]
+            ],
+            bonusMoves: [],
+            consecutiveDoubles: 0
         }
 
         const moves = getLegalMoves(state)
