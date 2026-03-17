@@ -24,7 +24,7 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
 
         const moves = getLegalMoves(state)
 
-        expect(moves.length).toBeGreaterThanOrEqual(0)
+        expect(moves.find(m => m.to.type === "track" && m.to.index === 5)).toBeUndefined()
     })
 
 
@@ -127,7 +127,13 @@ describe("Blockade Rules (RULE-BLOCK)", () => {
 
         const moves = getLegalMoves(state)
 
-        expect(moves.length).toBe(1)
+        const move = moves.find(
+            m => m.pawnId === 0 &&
+                m.to.type === "track" &&
+                m.to.index === 5
+        )
+
+        expect(move).toBeDefined()
 
     })
 
