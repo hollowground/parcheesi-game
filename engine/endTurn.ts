@@ -17,7 +17,7 @@ export function endTurn(state: GameState): GameState {
             const player = newState.currentPlayer
 
             const playerPawns = newState.pawns.filter(
-                p => p.player === player && p.position.type === "track"
+                p => p.player === player && p.position.type === "track" || p.position.type === "homeLane"
             )
 
             if (playerPawns.length > 0) {
@@ -25,6 +25,7 @@ export function endTurn(state: GameState): GameState {
                 const farthestPawn = playerPawns.reduce((farthest, pawn) =>
                     pawnProgress(pawn) > pawnProgress(farthest) ? pawn : farthest
                 )
+                console.log("Triple doubles! Sending farthest pawn back to start:", farthestPawn)
 
                 farthestPawn.position = { type: "start" }
 

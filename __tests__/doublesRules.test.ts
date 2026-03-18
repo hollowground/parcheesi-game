@@ -39,7 +39,7 @@ describe("Doubles Rules (RULE-DOUBLES)", () => {
             consecutiveDoubles: 2,
 
             pawns: [
-                { id: 0, player: "red", position: { type: "track", index: 10 } },
+                { id: 0, player: "red", position: { type: "homeLane", index: 1 } },
                 { id: 1, player: "red", position: { type: "track", index: 25 } }
             ]
         }
@@ -49,7 +49,8 @@ describe("Doubles Rules (RULE-DOUBLES)", () => {
         const pawn0 = newState.pawns.find(p => p.id === 0)!
         const pawn1 = newState.pawns.find(p => p.id === 1)!
 
-        expect(pawn1.position).toEqual({ type: "start" })
+        expect(pawn0.position).toEqual({ type: "start" })
+        expect(pawn1.position).toEqual({ type: "track", index: 25 })
 
         expect(newState.currentPlayer).toBe("blue")
         expect(newState.consecutiveDoubles).toBe(0)
