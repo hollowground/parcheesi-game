@@ -1,4 +1,4 @@
-import { GameState, PlayerColor } from "../types/GameState"
+import { GameState, Pawn, PlayerColor } from "../types/GameState"
 import { SAFETY_SQUARES } from "./boardConfig"
 
 
@@ -39,4 +39,23 @@ export function getEnemyPawnsOnSquare(
     return getPawnsOnSquare(state, index).filter(
         p => p.player !== player
     )
+}
+
+export function pawnProgress(pawn: Pawn): number {
+
+    switch (pawn.position.type) {
+
+        case "start":
+            return -1
+
+        case "track":
+            return pawn.position.index
+
+        case "homeLane":
+            return 100 + pawn.position.index
+
+        case "home":
+            return 200
+    }
+
 }

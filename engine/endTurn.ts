@@ -1,4 +1,5 @@
 import { GameState } from "../types/GameState"
+import { pawnProgress } from "./boardUtils"
 
 export function endTurn(state: GameState): GameState {
 
@@ -21,13 +22,9 @@ export function endTurn(state: GameState): GameState {
 
             if (playerPawns.length > 0) {
 
-                const farthestPawn = playerPawns.reduce((farthest, pawn) => {
-
-                    const farthestIndex = (farthest.position as { type: "track", index: number }).index
-                    const pawnIndex = (pawn.position as { type: "track", index: number }).index
-
-                    return pawnIndex > farthestIndex ? pawn : farthest
-                })
+                const farthestPawn = playerPawns.reduce((farthest, pawn) =>
+                    pawnProgress(pawn) > pawnProgress(farthest) ? pawn : farthest
+                )
 
                 farthestPawn.position = { type: "start" }
 
