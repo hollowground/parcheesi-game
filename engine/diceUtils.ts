@@ -8,8 +8,10 @@ export function rollDice(count = 2): number[] {
     return Array.from({ length: count }, () => rollDie())
 }
 
+export function getRemainingDice(dice: number[], usedDice: number[]): number[] {
+  return dice.filter(d => !usedDice.includes(d))
+}
+
 export function getAvailableDice(state: GameState): number[] {
-    return state.dice.filter(
-        d => !state.usedDice.includes(d)
-    )
+  return getRemainingDice(state.dice, state.usedDice)
 }

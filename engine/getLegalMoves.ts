@@ -4,42 +4,55 @@ import { Move } from "../types/Move"
 import { getEntryMoves } from "../rules/entryRules"
 import { getMovementMoves } from "../rules/movementRules"
 import { ENTRY_INDEX } from "./boardConfig"
+import { getAvailableDice } from "./diceUtils"
 
 export function getLegalMoves(state: GameState): Move[] {
 
+  // 🥇 ENTRY RULE (still highest priority)
   const entryMoves = getEntryMoves(state)
   console.log(`Entry moves available: ${entryMoves.length}`)
 
-  // entry available → must take it
   if (entryMoves.length > 0) {
     return entryMoves
   }
 
-  const rolledFive = state.dice.includes(5)
-  console.log(`Rolled a 5: ${rolledFive}`)
-  console.log(`Die rolled: ${state.dice.join(", ")}`)
+  // 🥈 BONUS PRIORITY
+  if (state.bonusMoves.length > 0) {
 
-  const hasStartPawn = state.pawns.some(
-    p => p.player === state.currentPlayer && p.position.type === "start"
-  )
-  console.log(`Has pawn in start: ${hasStartPawn}`)
+    console.log(`Trying bonus moves: ${state.bonusMoves.join(", ")}`)
 
-  const entryIndex = ENTRY_INDEX[state.currentPlayer]
+    const bonusMoves = generateMovesForDice(state, state.bonusMoves)
 
-  const entryOccupants = state.pawns.filter(
-    p => p.position.type === "track" && p.position.index === entryIndex
-  )
-  console.log(`Entry square occupants: ${entryOccupants.length}`)
+    console.log(`Bonus moves found: ${bonusMoves.length}`)
 
-  const entryBlocked = entryOccupants.length >= 2
-  console.log(`Entry square blocked: ${entryBlocked}`)
+    if (bonusMoves.length > 0) {
+      return bonusMoves
+    }
 
-  // special rule: 5 rolled but entry blocked
-  if (rolledFive && hasStartPawn && entryBlocked) {
-    return []
+    console.log(`Bonus unusable → falling back to dice`)
   }
 
-  console.log(`No entry moves, checking movement moves: ${JSON.stringify(getMovementMoves(state))}`)
+  // 🥉 NORMAL DICE
+  const remainingDice = getAvailableDice(state)
 
-  return getMovementMoves(state)
+  console.log(`Using dice: ${remainingDice.join(", ")}`)
+
+  return generateMovesForDice(state, remainingDice)
+}
+
+function generateMovesForDice(state: GameState, dice: number[]): Move[] {
+
+  const tempState: GameState = {
+    ...state,
+    dice,
+    usedDice: []
+  }
+
+  const entryMoves = getEntryMoves(tempState)
+
+  if (entryMoves.length > 0) {
+    return entryMoves
+  }
+
+  return getMovementMoves(tempState)
 }
