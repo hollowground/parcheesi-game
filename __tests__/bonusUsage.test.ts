@@ -45,7 +45,7 @@ describe("Bonus Usage Rules (RULE-BONUS-USAGE)", () => {
 
             // pawn is blocked (simulate via position near blockade or home overflow)
             pawns: [
-                { id: 1, player: "red", position: { type: "homeLane", index: 6 } },
+                { id: 1, player: "red", position: { type: "homeLane", index: 1 } },
             ]
         }
 

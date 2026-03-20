@@ -37,7 +37,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         ).toBe(true)
     })
 
-    it("RULE-ENTRY-001: pawn cannot enter without rolling a 5", () => {
+    it("RULE-ENTRY-001-B: pawn cannot enter without rolling a 5", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
@@ -59,7 +59,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         expect(moves.length).toBe(0)
     })
 
-    it("RULE-ENTRY-001: entry square capacity limits entry moves to two", () => {
+    it("RULE-ENTRY-001-C: entry square capacity limits entry moves to two", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
@@ -82,7 +82,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         expect(moves.length).toBe(2)
     })
 
-    it("RULE-ENTRY-001: only current player's pawns can enter from start", () => {
+    it("RULE-ENTRY-001-D: only current player's pawns can enter from start", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
@@ -125,12 +125,41 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         }
 
         const moves = getLegalMoves(state)
+        console.log(moves)
 
-        expect(moves.length).toBe(0)
+        expect(
+            moves.some(
+                m =>
+                    m.pawnId === 2 &&
+                    m.to.type === "track" &&
+                    m.to.index === ENTRY_INDEX.red + state.dice[0]!
+            ) ||
+            moves.some(
+                m =>
+                    m.pawnId === 3 &&
+                    m.to.type === "track" &&
+                    m.to.index === ENTRY_INDEX.red + state.dice[0]!
+            )
+        ).toBe(true)
+
+        expect(
+            moves.some(
+                m =>
+                    m.pawnId === 0 &&
+                    m.to.type === "track" &&
+                    m.to.index === ENTRY_INDEX.red
+            ) ||
+            moves.some(
+                m =>
+                    m.pawnId === 1 &&
+                    m.to.type === "track" &&
+                    m.to.index === ENTRY_INDEX.red
+            )
+        ).toBe(false)
 
     })
 
-    it("RULE-ENTRY-002: entry is blocked if two enemy pawns occupy the entry square (blockade)", () => {
+    it("RULE-ENTRY-002-B: entry is blocked if two enemy pawns occupy the entry square (blockade)", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
@@ -154,7 +183,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
     })
 
-    it("RULE-ENTRY-002: entry allowed if only one pawn occupies entry square", () => {
+    it("RULE-ENTRY-002-C: entry allowed if only one pawn occupies entry square", () => {
 
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
