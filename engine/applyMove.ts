@@ -5,6 +5,10 @@ import { getEnemyPawnsOnSquare, isSafeSquare } from "../engine/boardUtils"
 export function applyMove(state: GameState, move: Move): GameState {
 
     const newState = structuredClone(state)
+    // ✅ consume die (ONLY if it's from dice, not bonus)
+    if (state.dice.includes(move.die)) {
+        newState.usedDice.push(move.die)
+    }
 
     const pawn = newState.pawns.find(p => p.id === move.pawnId)
 
@@ -31,7 +35,7 @@ export function applyMove(state: GameState, move: Move): GameState {
             )
             console.log(`Enemies on destination square: ${enemies.map(e => e.id).join(", ")}`)
 
-            if (enemies.length > 0) {
+            if (move.capture) {
 
                 for (const enemy of enemies) {
                     enemy.position = { type: "start" }
