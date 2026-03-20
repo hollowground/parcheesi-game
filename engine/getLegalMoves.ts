@@ -3,7 +3,6 @@ import { Move } from "../types/Move"
 
 import { getEntryMoves } from "../rules/entryRules"
 import { getMovementMoves } from "../rules/movementRules"
-import { ENTRY_INDEX } from "./boardConfig"
 import { getAvailableDice } from "./diceUtils"
 
 export function getLegalMoves(state: GameState): Move[] {
@@ -46,12 +45,6 @@ function generateMovesForDice(state: GameState, dice: number[]): Move[] {
     ...state,
     dice,
     usedDice: []
-  }
-
-  const entryMoves = getEntryMoves(tempState)
-
-  if (entryMoves.length > 0) {
-    return entryMoves
   }
 
   return getMovementMoves(tempState)
