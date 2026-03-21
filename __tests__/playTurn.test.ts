@@ -76,4 +76,34 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
 
     })
 
+    it("delays bonus until all dice are used", () => {
+
+        let state: GameState = {
+            players: ["red", "blue"],
+            currentPlayer: "red",
+
+            dice: [3, 4],
+            usedDice: [],
+
+            bonusMoves: [],
+            consecutiveDoubles: 0,
+
+            pawns: [
+                // capture setup
+                { id: 1, player: "red", position: { type: "track", index: 10 } },
+                { id: 2, player: "blue", position: { type: "track", index: 13 } },
+            ]
+        }
+
+        const finalState = playTurn(state, (moves) => moves[0]!)
+
+        // ✅ dice must be used
+        expect(finalState.usedDice).toContain(3)
+        expect(finalState.usedDice).toContain(4)
+
+        // ✅ bonus should ALSO be consumed AFTER dice
+        expect(finalState.bonusMoves.length).toBe(0)
+
+    })
+
 })

@@ -10,15 +10,44 @@ export function playTurn(
 
     let currentState = structuredClone(state)
 
+    // -------------------------
+    // PHASE 1: USE ALL DICE
+    // -------------------------
     while (true) {
 
         const moves = getLegalMoves(currentState)
 
-        if (moves.length === 0) break
+        // Only allow moves that use dice
+        const diceMoves = moves.filter(m => m.die !== 20)
 
-        const move = chooseMove(moves, currentState)
+        if (diceMoves.length === 0) break
+
+        const move = chooseMove(diceMoves, currentState)
 
         currentState = applyMove(currentState, move)
+    }
+
+    // -------------------------
+    // PHASE 2: USE BONUS (ONCE PER BONUS)
+    // -------------------------
+    while (currentState.bonusMoves.length > 0) {
+
+        const moves = getLegalMoves(currentState)
+
+        const bonusMoves = moves.filter(m => m.die === 20)
+
+        if (bonusMoves.length === 0) {
+            // ❗ FORFEIT remaining bonuses
+            currentState.bonusMoves = []
+            break
+        }
+
+        const move = chooseMove(bonusMoves, currentState)
+
+        currentState = applyMove(currentState, move)
+
+        // 🔑 CRITICAL: consume ONE bonus explicitly
+        currentState.bonusMoves.shift()
     }
 
     return currentState
