@@ -7,7 +7,7 @@ import { getAvailableDice } from "./diceUtils"
 
 export function getLegalMoves(state: GameState): Move[] {
 
-  // 🥇 ENTRY RULE (still highest priority)
+  // 🥇 ENTRY RULE (always first)
   const entryMoves = getEntryMoves(state)
   console.log(`Entry moves available: ${entryMoves.length}`)
 
@@ -15,10 +15,18 @@ export function getLegalMoves(state: GameState): Move[] {
     return entryMoves
   }
 
-  // 🥈 BONUS PRIORITY
+  // 🥈 DICE PHASE (must be completed first)
+  const remainingDice = getAvailableDice(state)
+
+  if (remainingDice.length > 0) {
+    console.log(`Using dice: ${remainingDice.join(", ")}`)
+    return generateMovesForDice(state, remainingDice)
+  }
+
+  // 🥉 BONUS PHASE (ONLY after dice are done)
   if (state.bonusMoves.length > 0) {
 
-    console.log(`Trying bonus moves: ${state.bonusMoves.join(", ")}`)
+    console.log(`Attempting bonus moves: ${state.bonusMoves.join(", ")}`)
 
     const bonusMoves = generateMovesForDice(state, state.bonusMoves)
 
@@ -28,15 +36,17 @@ export function getLegalMoves(state: GameState): Move[] {
       return bonusMoves
     }
 
-    console.log(`Bonus unusable → falling back to dice`)
+    // ❗ FORFEIT RULE
+    console.log(`No valid bonus moves → forfeiting bonuses`)
+
+    // IMPORTANT: we do NOT mutate state here
+    // forfeiting should happen in the TURN ENGINE, not here
+
+    return []
   }
 
-  // 🥉 NORMAL DICE
-  const remainingDice = getAvailableDice(state)
-
-  console.log(`Using dice: ${remainingDice.join(", ")}`)
-
-  return generateMovesForDice(state, remainingDice)
+  // ✅ nothing left to do
+  return []
 }
 
 function generateMovesForDice(state: GameState, dice: number[]): Move[] {
