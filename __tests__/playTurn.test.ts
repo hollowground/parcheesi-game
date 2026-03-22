@@ -106,4 +106,70 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
 
     })
 
+    it("forfeits bonus if no pawn can move full 20 spaces", () => {
+
+        const state: GameState = {
+            players: ["red", "blue"],
+            currentPlayer: "red",
+
+            dice: [],
+            usedDice: [],
+
+            bonusMoves: [20],
+            consecutiveDoubles: 0,
+
+            pawns: [
+                // pawn is too close to home — cannot move full 20
+                { id: 1, player: "red", position: { type: "homeLane", index: 6 } },
+            ]
+        }
+
+        const finalState = playTurn(state, (moves) => moves[0]!)
+
+        // ❗ bonus must be cleared
+        expect(finalState.bonusMoves.length).toBe(0)
+
+    })
+
+    it("allows bonus to be applied to a different pawn than the capturing pawn", () => {
+
+        const state: GameState = {
+            players: ["red", "blue"],
+            currentPlayer: "red",
+
+            dice: [3],
+            usedDice: [],
+
+            bonusMoves: [],
+            consecutiveDoubles: 0,
+
+            pawns: [
+                // Pawn 1 will capture
+                { id: 1, player: "red", position: { type: "track", index: 10 } },
+
+                // Pawn 2 is elsewhere
+                { id: 2, player: "red", position: { type: "track", index: 0 } },
+
+                // Enemy to capture
+                { id: 3, player: "blue", position: { type: "track", index: 13 } },
+            ]
+        }
+
+        const finalState = playTurn(state, (moves) => {
+            // Force capture first, then prefer moving pawn 2 for bonus
+            const captureMove = moves.find(m => m.capture)
+            if (captureMove) return captureMove
+
+            return moves.find(m => m.pawnId === 2)! // force bonus on different pawn
+        })
+
+        // Pawn 2 should have moved via bonus
+        const pawn2 = finalState.pawns.find(p => p.id === 2)!
+        console.log(`Pawn 2 final position:`, pawn2.position)
+
+        expect(pawn2.position.type).toBe("track")
+        expect(pawn2.position).toEqual({ type: "track", index: 20 })
+
+    })
+
 })

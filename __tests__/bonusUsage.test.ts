@@ -146,5 +146,4 @@ describe("Bonus Usage Rules (RULE-BONUS-USAGE)", () => {
         expect(dieValues).toContain(20)
 
     })
-
 })
