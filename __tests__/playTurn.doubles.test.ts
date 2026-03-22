@@ -56,4 +56,36 @@ describe("PlayTurn - Doubles Behavior", () => {
 
     })
 
+    it("triple doubles ends turn and sends farthest pawn to start", () => {
+
+        const state: GameState = {
+            players: ["red", "blue"],
+            currentPlayer: "red",
+
+            dice: [2, 2], // doubles
+            usedDice: [],
+
+            bonusMoves: [],
+            consecutiveDoubles: 2, // already rolled doubles twice
+
+            pawns: [
+                { id: 1, player: "red", position: { type: "track", index: 10 } },
+                { id: 2, player: "red", position: { type: "track", index: 20 } } // farthest
+            ]
+        }
+
+        const finalState = playTurn(state, (moves) => moves[0]!)
+
+        // ❗ farthest pawn should be sent back
+        const pawn2 = finalState.pawns.find(p => p.id === 2)!
+        expect(pawn2.position.type).toBe("start")
+
+        // ❗ turn should pass (penalty ends turn)
+        expect(finalState.currentPlayer).toBe("blue")
+
+        // ❗ reset doubles counter
+        expect(finalState.consecutiveDoubles).toBe(0)
+
+    })
+
 })
