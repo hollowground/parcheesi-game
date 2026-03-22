@@ -2,6 +2,7 @@ import { GameState } from "../types/GameState"
 import { Move } from "../types/Move"
 import { getLegalMoves } from "./getLegalMoves"
 import { applyMove } from "./applyMove"
+import { endTurn } from "../engine/endTurn"
 
 export function playTurn(
     state: GameState,
@@ -50,5 +51,5 @@ export function playTurn(
         currentState.bonusMoves.shift()
     }
 
-    return currentState
+    return endTurn(currentState)
 }
