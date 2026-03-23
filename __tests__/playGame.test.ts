@@ -17,8 +17,11 @@ describe("Play Game Rules (RULE-PLAYGAME)", () => {
             consecutiveDoubles: 0,
 
             pawns: [
-                { id: 1, player: "red", position: { type: "homeLane", index: 6 } }, // almost done
-                { id: 2, player: "blue", position: { type: "track", index: 0 } }
+                { id: 1, player: "red", position: { type: "home" } }, 
+                { id: 2, player: "red", position: { type: "home" } },
+                { id: 3, player: "red", position: { type: "home" } },
+                { id: 4, player: "red", position: { type: "home" } },
+                { id: 5, player: "blue", position: { type: "track", index: 0 } }
             ]
         }
 

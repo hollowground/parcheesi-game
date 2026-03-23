@@ -3,6 +3,7 @@ import { Move } from "../types/Move"
 import { getLegalMoves } from "./getLegalMoves"
 import { applyMove } from "./applyMove"
 import { endTurn } from "../engine/endTurn"
+import { checkWinner } from "./checkWinner"
 
 export function playTurn(
     state: GameState,
@@ -51,5 +52,15 @@ export function playTurn(
         currentState.bonusMoves.shift()
     }
 
-    return endTurn(currentState)
+    const winner = checkWinner(state)
+
+    if (winner) {
+        return {
+            ...state,
+            winner
+        }
+    } else {
+
+        return endTurn(currentState)
+    }
 }
