@@ -62,11 +62,11 @@ describe("PlayTurn - Doubles Behavior", () => {
             players: ["red", "blue"],
             currentPlayer: "red",
 
-            dice: [2, 2], // doubles
+            dice: [2, 2],
             usedDice: [],
 
             bonusMoves: [],
-            consecutiveDoubles: 2, // already rolled doubles twice
+            consecutiveDoubles: 2,
 
             pawns: [
                 { id: 1, player: "red", position: { type: "track", index: 10 } },
@@ -76,15 +76,50 @@ describe("PlayTurn - Doubles Behavior", () => {
 
         const finalState = playTurn(state, (moves) => moves[0]!)
 
-        // ❗ farthest pawn should be sent back
+        const pawn1 = finalState.pawns.find(p => p.id === 1)!
         const pawn2 = finalState.pawns.find(p => p.id === 2)!
-        expect(pawn2.position.type).toBe("start")
 
-        // ❗ turn should pass (penalty ends turn)
+        // ✅ ensure ONLY farthest pawn reset
+        expect(pawn2.position).toEqual({ type: "start" })
+        expect(pawn1.position.type).toBe("track")
+
+        // ✅ ensure it actually changed
+        expect(state.pawns[1]!.position.type).toBe("track")
+
+        // ✅ turn must pass
         expect(finalState.currentPlayer).toBe("blue")
 
-        // ❗ reset doubles counter
+        // ✅ doubles reset
         expect(finalState.consecutiveDoubles).toBe(0)
+
+    })
+
+    it("does NOT trigger triple doubles penalty if not third double", () => {
+
+        const state: GameState = {
+            players: ["red", "blue"],
+            currentPlayer: "red",
+
+            dice: [2, 2],
+            usedDice: [],
+
+            bonusMoves: [],
+            consecutiveDoubles: 1, // NOT third
+
+            pawns: [
+                { id: 1, player: "red", position: { type: "track", index: 20 } }
+            ]
+        }
+
+        const finalState = playTurn(state, (moves) => moves[0]!)
+
+        const pawn = finalState.pawns[0]!
+
+        // ❗ should NOT be sent home
+        expect(pawn.position.type).not.toBe("start")
+
+        // ❗ should still be same player
+        expect(finalState.currentPlayer).toBe("red")
 
     })
 
