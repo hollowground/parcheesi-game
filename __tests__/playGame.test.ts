@@ -46,8 +46,10 @@ describe("Play Game Rules (RULE-PLAYGAME)", () => {
             consecutiveDoubles: 0,
 
             pawns: [
-                { id: 1, player: "red", position: { type: "homeLane", index: 6 } },
-                { id: 2, player: "red", position: { type: "homeLane", index: 6 } }
+                { id: 1, player: "blue", position: { type: "home" } },
+                { id: 2, player: "blue", position: { type: "home" } },
+                { id: 3, player: "blue", position: { type: "home" } },
+                { id: 4, player: "blue", position: { type: "home" } }
             ]
         }
 
@@ -56,7 +58,8 @@ describe("Play Game Rules (RULE-PLAYGAME)", () => {
             blue: () => 0
         })
 
-        expect(result.winner).toBe("red")
+        // ❗ MUST be blue, not first player
+        expect(result.winner).toBe("blue")
 
     })
 
