@@ -1,41 +1,39 @@
-import { GameState } from "../types/GameState"
+import { GameState, PlayerColor } from "../types/GameState"
+import { playTurn } from "./playTurn"
 import { checkWinner } from "./checkWinner"
 
 export function playGame(
     initialState: GameState,
-    strategyMap: Record<string, (moves: any[]) => number>
-): { winner?: string } {
+    strategies: Partial<Record<PlayerColor, (moves: any[]) => number>>
+): GameState {
 
-    let state = { ...initialState }
+    let state = initialState
 
-    // 🟡 try winner immediately
-    /*
-    for (const player of state.players) {
-        const pawns = state.pawns.filter(p => p.player === player)
-        console.log(`Checking player ${player} with pawns:`, pawns)
+    // ✅ 1. Check BEFORE loop
+    const initialWinner = checkWinner(state)
+    if (initialWinner) {
+        return { ...state, winner: initialWinner }
+    }
 
-        const allHome =
-            pawns.length > 0 &&
-            pawns.every(p => p.position.type === "home")
+    let turnCount = 0
+    const MAX_TURNS = 1000
 
-        console.log(`All pawns home for ${player}?`, allHome)
+    while (!state.winner && turnCount < MAX_TURNS) {
 
-        if (allHome) {
-            return { winner: player }
+        const strategy = strategies[state.currentPlayer]!
+
+        state = playTurn(state, (moves) => {
+            const index = strategy(moves)
+            return moves[index]!
+        })
+
+        const winner = checkWinner(state)
+        if (winner) {
+            return { ...state, winner }
         }
-    } */
 
-    const isWinner = checkWinner(state)
-    console.log("Winner after initial check:", isWinner)
-    if (isWinner) {
-        return { winner: isWinner }
-    }
-    else {
-        console.log("No winner at start of game.")
-        return {}
+        turnCount++
     }
 
-
-    // 🟡 TEMP: fallback so test passes
-    //return { winner: state.players[0]! }
+    throw new Error("Game did not finish within turn limit")
 }
