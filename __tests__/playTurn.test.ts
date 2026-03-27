@@ -125,6 +125,7 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
         }
 
         const finalState = playTurn(state, (moves) => moves[0]!)
+        console.log("Final state after attempting bonus:", JSON.stringify(finalState))
 
         // ❗ bonus must be cleared
         expect(finalState.bonusMoves.length).toBe(0)

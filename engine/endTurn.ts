@@ -17,7 +17,9 @@ export function endTurn(state: GameState): GameState {
             const player = newState.currentPlayer
 
             const playerPawns = newState.pawns.filter(
-                p => p.player === player && p.position.type === "track" || p.position.type === "homeLane"
+                p =>
+                    p.player === player &&
+                    (p.position.type === "track" || p.position.type === "homeLane")
             )
 
             if (playerPawns.length > 0) {
@@ -33,6 +35,9 @@ export function endTurn(state: GameState): GameState {
 
             newState.consecutiveDoubles = 0
             advancePlayer(newState)
+            newState.dice = []
+            //newState.usedDice = []
+            newState.bonusMoves = []
 
         }
 
@@ -42,6 +47,9 @@ export function endTurn(state: GameState): GameState {
     // normal turn end
     newState.consecutiveDoubles = 0
     advancePlayer(newState)
+    newState.dice = []
+    //newState.usedDice = []
+    newState.bonusMoves = []
 
     return newState
 }

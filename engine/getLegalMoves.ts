@@ -9,7 +9,7 @@ export function getLegalMoves(state: GameState): Move[] {
 
   // 🥇 ENTRY RULE (always first)
   const entryMoves = getEntryMoves(state)
-  console.log(`Entry moves available: ${entryMoves.length}`)
+  //console.log(`Entry moves available: ${entryMoves.length}`)
 
   if (entryMoves.length > 0) {
     return entryMoves

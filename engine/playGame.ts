@@ -1,6 +1,7 @@
 import { GameState, PlayerColor } from "../types/GameState"
 import { playTurn } from "./playTurn"
 import { checkWinner } from "./checkWinner"
+import { rollDice } from "./diceUtils"
 
 export function playGame(
     initialState: GameState,
@@ -20,7 +21,14 @@ export function playGame(
 
     while (!state.winner && turnCount < MAX_TURNS) {
 
+        state = {
+            ...state,
+            dice: rollDice(),
+            usedDice: [],
+        }
+
         const strategy = strategies[state.currentPlayer]!
+
 
         state = playTurn(state, (moves) => {
             const index = strategy(moves)
