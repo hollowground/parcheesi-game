@@ -3,17 +3,27 @@ import { playTurn } from "./playTurn"
 import { checkWinner } from "./checkWinner"
 import { rollDice } from "./diceUtils"
 
+export type GameResult = {
+    finalState: GameState
+    winner: PlayerColor
+    turnCount: number
+}
+
 export function playGame(
     initialState: GameState,
     strategies: Partial<Record<PlayerColor, (moves: any[]) => number>>
-): GameState {
+): GameResult {
 
     let state = initialState
 
     // ✅ 1. Check BEFORE loop
     const initialWinner = checkWinner(state)
     if (initialWinner) {
-        return { ...state, winner: initialWinner }
+        return {
+            finalState: { ...state, winner: initialWinner },
+            winner: initialWinner,
+            turnCount: 0
+        }
     }
 
     let turnCount = 0
@@ -37,7 +47,11 @@ export function playGame(
 
         const winner = checkWinner(state)
         if (winner) {
-            return { ...state, winner }
+            return {
+                finalState: { ...state, winner },
+                winner,
+                turnCount
+            }
         }
 
         turnCount++
