@@ -7,6 +7,15 @@ import { isValidState } from "../validators/isValidState"
 type Stats = {
     wins: Record<PlayerColor, number>
     totalTurns: number[]
+    diceRolls: Record<number, number>
+    doublesCount: number
+    totalRolls: number
+    startingPositionWins: {
+        first: 0,
+        second: 0,
+        third: 0,
+        fourth: 0
+    }
 }
 
 const randomStrategy = (moves: any[]) => {
@@ -56,8 +65,19 @@ export function runSimulation(numGames: number): Stats {
             yellow: 0,
             green: 0
         },
-        totalTurns: []
+        totalTurns: [],
+        diceRolls: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+        doublesCount: 0,
+        totalRolls: 0,
+        startingPositionWins: {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0
+        }
     }
+
+    const positionMap = ["first", "second", "third", "fourth"] as const
 
     for (let i = 0; i < numGames; i++) {
         const players: PlayerColor[] = ["red", "blue", "yellow", "green"]
@@ -75,6 +95,11 @@ export function runSimulation(numGames: number): Stats {
 
         stats.wins[result.winner!]++
         stats.totalTurns.push(result.turnCount)
+        const winnerIndex = players.indexOf(result.winner!)
+        const relativePosition = (winnerIndex - startIndex + 4) % 4
+
+        const positionKey = positionMap[relativePosition]!
+        stats.startingPositionWins[positionKey]++
 
         if (i % 1000 === 0) {
             console.log(`Completed ${i} games`)
@@ -92,6 +117,10 @@ export function analyzeStats(stats: Stats) {
 
     const maxTurns = Math.max(...stats.totalTurns)
     const minTurns = Math.min(...stats.totalTurns)
+    const variance =
+        stats.totalTurns.reduce((sum, t) => sum + Math.pow(t - avgTurns, 2), 0) / totalGames
+
+    const stdDev = Math.sqrt(variance)
 
     console.log("\n=== Simulation Results ===")
 
@@ -106,4 +135,11 @@ export function analyzeStats(stats: Stats) {
     console.log(`Average Turns: ${avgTurns.toFixed(2)}`)
     console.log(`Min Turns: ${minTurns}`)
     console.log(`Max Turns: ${maxTurns}`)
+    console.log(`Std Dev Turns: ${stdDev.toFixed(2)}`)
+    console.log("\nStarting Position Win Rates:")
+    for (const pos in stats.startingPositionWins) {
+        const wins = stats.startingPositionWins[pos as keyof typeof stats.startingPositionWins]
+        const pct = ((wins / totalGames) * 100).toFixed(2)
+        console.log(`${pos}: ${wins} (${pct}%)`)
+    }
 }
