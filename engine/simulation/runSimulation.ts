@@ -1,5 +1,5 @@
 import { runSimulation, analyzeStats } from "./simulateGames"
 
-const stats = runSimulation(100)
+const stats = runSimulation(200)
 
 analyzeStats(stats)

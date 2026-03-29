@@ -87,9 +87,9 @@ describe("Capturing Rules", () => {
         }
 
         const safeSquare = SAFETY_SQUARES[1]
-        console.log(`Safety square for blue: ${safeSquare}`)
+        //console.log(`Safety square for blue: ${safeSquare}`)
         const moves = getLegalMoves(state)
-        console.log(`Legal moves: ${JSON.stringify(moves)}`)
+        //console.log(`Legal moves: ${JSON.stringify(moves)}`)
 
         const move = moves.find(
             m => m.pawnId === 0 &&

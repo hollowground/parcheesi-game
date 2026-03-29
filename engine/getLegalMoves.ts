@@ -19,25 +19,25 @@ export function getLegalMoves(state: GameState): Move[] {
   const remainingDice = getAvailableDice(state)
 
   if (remainingDice.length > 0) {
-    console.log(`Using dice: ${remainingDice.join(", ")}`)
+    //console.log(`Using dice: ${remainingDice.join(", ")}`)
     return generateMovesForDice(state, remainingDice)
   }
 
   // 🥉 BONUS PHASE (ONLY after dice are done)
   if (state.bonusMoves.length > 0) {
 
-    console.log(`Attempting bonus moves: ${state.bonusMoves.join(", ")}`)
+    //console.log(`Attempting bonus moves: ${state.bonusMoves.join(", ")}`)
 
     const bonusMoves = generateMovesForDice(state, state.bonusMoves)
 
-    console.log(`Bonus moves found: ${bonusMoves.length}`)
+    //console.log(`Bonus moves found: ${bonusMoves.length}`)
 
     if (bonusMoves.length > 0) {
       return bonusMoves
     }
 
     // ❗ FORFEIT RULE
-    console.log(`No valid bonus moves → forfeiting bonuses`)
+    //console.log(`No valid bonus moves → forfeiting bonuses`)
 
     // IMPORTANT: we do NOT mutate state here
     // forfeiting should happen in the TURN ENGINE, not here

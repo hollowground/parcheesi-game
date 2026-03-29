@@ -49,7 +49,7 @@ describe("Home Entry Rules", () => {
         }
 
         const moves = getLegalMoves(state)
-        console.log(`Legal moves: ${moves.length}`)
+        //console.log(`Legal moves: ${moves.length}`)
 
         expect(moves.length).toBe(0)
 
@@ -73,7 +73,7 @@ describe("Home Entry Rules", () => {
         }
 
         const moves = getLegalMoves(state)
-        console.log(`Legal moves: ${moves.length}`)
+        //console.log(`Legal moves: ${moves.length}`)
 
         // Needs exactly 2, not 3
         expect(moves.length).toBe(0)

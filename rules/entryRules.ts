@@ -11,10 +11,10 @@ export function getEntryMoves(state: GameState): Move[] {
     return moves
   }
 
-  console.log(`Die is ${state.dice[0]}, checking entry moves`)
+  //console.log(`Die is ${state.dice[0]}, checking entry moves`)
 
   const entryIndex = ENTRY_INDEX[state.currentPlayer]
-  console.log(`Entry index for player ${state.currentPlayer}: ${entryIndex}`)
+  //console.log(`Entry index for player ${state.currentPlayer}: ${entryIndex}`)
 
   // pawns currently on the entry square
   const entryOccupants = state.pawns.filter(p =>
@@ -23,7 +23,7 @@ export function getEntryMoves(state: GameState): Move[] {
   )
 
   const occupantCount = entryOccupants.length
-  console.log(`Entry square has ${occupantCount} occupants`)
+  //console.log(`Entry square has ${occupantCount} occupants`)
 
   // square full (blockade)
   if (occupantCount >= 2) {
@@ -35,13 +35,13 @@ export function getEntryMoves(state: GameState): Move[] {
     p.player === state.currentPlayer &&
     p.position.type === "start"
   )
-  console.log(`Player has ${startPawns.length} pawns in start`) 
+  //console.log(`Player has ${startPawns.length} pawns in start`) 
 
   // only allow remaining capacity
   const capacity = 2 - occupantCount
-  console.log(`Entry square capacity: ${capacity}`)
+  //console.log(`Entry square capacity: ${capacity}`)
   const allowed = startPawns.slice(0, capacity)
-  console.log(`Allowed pawns to enter: ${allowed.map(p => p.id).join(", ")}`)
+  //console.log(`Allowed pawns to enter: ${allowed.map(p => p.id).join(", ")}`)
 
   for (const pawn of allowed) {
     moves.push({

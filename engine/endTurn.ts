@@ -27,7 +27,7 @@ export function endTurn(state: GameState): GameState {
                 const farthestPawn = playerPawns.reduce((farthest, pawn) =>
                     pawnProgress(pawn) > pawnProgress(farthest) ? pawn : farthest
                 )
-                console.log("Triple doubles! Sending farthest pawn back to start:", farthestPawn)
+                //console.log("Triple doubles! Sending farthest pawn back to start:", farthestPawn)
 
                 farthestPawn.position = { type: "start" }
 

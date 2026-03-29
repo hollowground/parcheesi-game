@@ -83,7 +83,7 @@ describe("Bonus Usage Rules (RULE-BONUS-USAGE)", () => {
 
         // STEP 1: capture with 3
         const moves = getLegalMoves(state)
-        console.log("Legal moves:", moves)
+        //console.log("Legal moves:", moves)
         const captureMove = moves.find(m => m.die === 3)!
 
         const newState = applyMove(state, captureMove)

@@ -23,8 +23,8 @@ export function applyMove(state: GameState, move: Move): GameState {
     if (move.to.type === "track") {
 
         const destinationIndex = move.to.index
-        console.log(`Pawn ${pawn.id} moved to track index ${destinationIndex}`)
-        console.log(`Is this a safe square? ${isSafeSquare(destinationIndex)}`)
+        //console.log(`Pawn ${pawn.id} moved to track index ${destinationIndex}`)
+        //console.log(`Is this a safe square? ${isSafeSquare(destinationIndex)}`)
 
         if (!isSafeSquare(destinationIndex)) {
 
@@ -33,7 +33,7 @@ export function applyMove(state: GameState, move: Move): GameState {
                 destinationIndex,
                 pawn.player
             )
-            console.log(`Enemies on destination square: ${enemies.map(e => e.id).join(", ")}`)
+            //console.log(`Enemies on destination square: ${enemies.map(e => e.id).join(", ")}`)
 
             if (move.capture) {
 

@@ -77,7 +77,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         }
 
         const moves = getLegalMoves(state)
-        console.log(moves)
+        //console.log(moves)
 
         expect(moves.length).toBe(2)
     })
@@ -125,7 +125,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         }
 
         const moves = getLegalMoves(state)
-        console.log(moves)
+        //console.log(moves)
 
         expect(
             moves.some(

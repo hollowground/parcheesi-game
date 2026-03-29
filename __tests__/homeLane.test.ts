@@ -93,7 +93,7 @@ describe("Home Lane Rules (RULE-HOME)", () => {
         }
 
         const moves = getLegalMoves(state)
-        console.log(`Moves: ${JSON.stringify(moves)}`)
+        //console.log(`Moves: ${JSON.stringify(moves)}`)
 
         expect(moves[0]!.to).toEqual({ type: "home" })
 

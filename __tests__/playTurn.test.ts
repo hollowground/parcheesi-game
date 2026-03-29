@@ -125,7 +125,7 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
         }
 
         const finalState = playTurn(state, (moves) => moves[0]!)
-        console.log("Final state after attempting bonus:", JSON.stringify(finalState))
+        //console.log("Final state after attempting bonus:", JSON.stringify(finalState))
 
         // ❗ bonus must be cleared
         expect(finalState.bonusMoves.length).toBe(0)
@@ -166,7 +166,7 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
 
         // Pawn 2 should have moved via bonus
         const pawn2 = finalState.pawns.find(p => p.id === 2)!
-        console.log(`Pawn 2 final position:`, pawn2.position)
+        //console.log(`Pawn 2 final position:`, pawn2.position)
 
         expect(pawn2.position.type).toBe("track")
         expect(pawn2.position).toEqual({ type: "track", index: 20 })
