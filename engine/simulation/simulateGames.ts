@@ -1,5 +1,6 @@
 import { playGame } from "../playGame"
 import { GameState, PlayerColor } from "../../types/GameState"
+import { isValidState } from "../validators/isValidState"
 
 
 
@@ -66,6 +67,11 @@ export function runSimulation(numGames: number): Stats {
         state.currentPlayer = players[startIndex]!
 
         const result = playGame(state, strategies)
+        // 🔍 Validate final state
+        if (!isValidState(result.finalState)) {
+            console.error("Invalid state detected:", result.finalState)
+            throw new Error(`Invalid game state on iteration ${i}`)
+        }
 
         stats.wins[result.winner!]++
         stats.totalTurns.push(result.turnCount)
