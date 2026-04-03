@@ -1,9 +1,9 @@
 import { playGame } from "../playGame"
 import { GameState, PlayerColor } from "../../types/GameState"
 import { isValidState } from "../validators/isValidState"
-import { captureStrategy, randomStrategy } from "../strategies"
+import { captureStrategy, randomStrategy, greedyStrategy, captureSafetyStrategy } from "../strategies"
 import { Strategy } from "../strategies/types"
-import { greedyStrategy } from "../strategies/greedyStrategy"
+
 
 type Stats = {
     wins: Record<PlayerColor, number>
@@ -20,10 +20,10 @@ type Stats = {
 }
 
 const strategies = {
-    red: captureStrategy,
-    blue: randomStrategy,
+    red: randomStrategy,
+    blue: captureSafetyStrategy,
     yellow: randomStrategy,
-    green: greedyStrategy
+    green: randomStrategy
 }
 
 // For simulation, we can use the same strategy for all players or mix them up
@@ -65,7 +65,7 @@ function createStrategies(strategy: Strategy) {
     }
 }
 
-export function runSimulation(numGames: number): Stats {
+export function runSimulation(numGames: number, strategies: Record<PlayerColor, Strategy>): Stats {
     const stats: Stats = {
         wins: {
             red: 0,
@@ -150,4 +150,35 @@ export function analyzeStats(stats: Stats) {
         const pct = ((wins / totalGames) * 100).toFixed(2)
         console.log(`${pos}: ${wins} (${pct}%)`)
     }
+}
+
+export function runStrategyComparison(numGames: number) {
+    const players: PlayerColor[] = ["red", "blue", "yellow", "green"]
+
+    const results: Record<PlayerColor, number> = {
+        red: 0,
+        blue: 0,
+        yellow: 0,
+        green: 0
+    }
+
+    for (const player of players) {
+
+        // Build strategies where ONE player is "smart"
+        const strategies = {
+            red: greedyStrategy,
+            blue: greedyStrategy,
+            yellow: greedyStrategy,
+            green: greedyStrategy
+        }
+
+        strategies[player] = captureSafetyStrategy
+
+        const stats = runSimulation(numGames, strategies)
+
+        // Only record wins for the smart player
+        results[player] = stats.wins[player]
+    }
+
+    return results
 }
