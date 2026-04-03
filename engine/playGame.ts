@@ -2,6 +2,7 @@ import { GameState, PlayerColor } from "../types/GameState"
 import { playTurn } from "./playTurn"
 import { checkWinner } from "./checkWinner"
 import { rollDice } from "./diceUtils"
+import { Strategy } from "./strategies/types"
 
 export type GameResult = {
     finalState: GameState
@@ -11,7 +12,7 @@ export type GameResult = {
 
 export function playGame(
     initialState: GameState,
-    strategies: Partial<Record<PlayerColor, (moves: any[]) => number>>
+    strategies: Partial<Record<PlayerColor, Strategy>>
 ): GameResult {
 
     let state = initialState
@@ -41,7 +42,11 @@ export function playGame(
 
 
         state = playTurn(state, (moves) => {
-            const index = strategy(moves)
+            const index = strategy({
+                state,
+                player: state.currentPlayer,
+                moves
+            })
             return moves[index]!
         })
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { playGame } from "../engine/playGame"
 import { GameState } from "../types/GameState"
+import { greedyStrategy } from "../engine/strategies/greedyStrategy"
 
 describe("Play Game Rules (RULE-PLAYGAME)", () => {
 
@@ -90,17 +91,12 @@ describe("Play Game Rules (RULE-PLAYGAME)", () => {
             ]
         }
 
-        const greedyStrategy = (moves: any[]) => {
-            const index = moves.findIndex(m => m.to.type === 'home')
-            if (index !== -1) return index
-
-            return 0
-        }
-
-        const result = playGame(state, {
+        const strategies = {
             red: greedyStrategy,
             blue: greedyStrategy
-        })
+        }
+
+        const result = playGame(state, strategies)
 
         expect(result.winner).toBeDefined()
 

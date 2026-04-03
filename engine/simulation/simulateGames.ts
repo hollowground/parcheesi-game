@@ -1,8 +1,9 @@
 import { playGame } from "../playGame"
 import { GameState, PlayerColor } from "../../types/GameState"
 import { isValidState } from "../validators/isValidState"
-
-
+import { captureStrategy, randomStrategy } from "../strategies"
+import { Strategy } from "../strategies/types"
+import { greedyStrategy } from "../strategies/greedyStrategy"
 
 type Stats = {
     wins: Record<PlayerColor, number>
@@ -18,16 +19,15 @@ type Stats = {
     }
 }
 
-const randomStrategy = (moves: any[]) => {
-    return Math.floor(Math.random() * moves.length)
-}
-
 const strategies = {
-    red: randomStrategy,
+    red: captureStrategy,
     blue: randomStrategy,
     yellow: randomStrategy,
-    green: randomStrategy
+    green: greedyStrategy
 }
+
+// For simulation, we can use the same strategy for all players or mix them up
+const strategiesForSimulation = createStrategies(randomStrategy)
 
 let initialGameState: GameState = {
     players: ["red", "blue", "yellow", "green"],
@@ -56,6 +56,14 @@ let initialGameState: GameState = {
     ]
 }
 
+function createStrategies(strategy: Strategy) {
+    return {
+        red: strategy,
+        blue: strategy,
+        yellow: strategy,
+        green: strategy
+    }
+}
 
 export function runSimulation(numGames: number): Stats {
     const stats: Stats = {

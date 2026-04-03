@@ -2,7 +2,7 @@ import { runSimulation, analyzeStats } from "./simulateGames"
 
 const startTime = new Date()
 
-const stats = runSimulation(50000)
+const stats = runSimulation(500)
 
 const endTime = new Date()
 
