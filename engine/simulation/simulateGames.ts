@@ -152,33 +152,51 @@ export function analyzeStats(stats: Stats) {
     }
 }
 
+function calculateZScore(wins: number, total: number): number {
+    const p = wins / total
+    const expected = 0.25
+    const variance = (expected * (1 - expected)) / total
+    const stdDev = Math.sqrt(variance)
+
+    return (p - expected) / stdDev
+}
+
 export function runStrategyComparison(numGames: number) {
     const players: PlayerColor[] = ["red", "blue", "yellow", "green"]
 
-    const results: Record<PlayerColor, number> = {
-        red: 0,
-        blue: 0,
-        yellow: 0,
-        green: 0
-    }
+    console.log("\n=== Strategy Comparison ===")
 
     for (const player of players) {
 
-        // Build strategies where ONE player is "smart"
-        const strategies = {
-            red: greedyStrategy,
-            blue: greedyStrategy,
-            yellow: greedyStrategy,
-            green: greedyStrategy
+        const strategies: Record<PlayerColor, Strategy> = {
+            red: randomStrategy,
+            blue: randomStrategy,
+            yellow: randomStrategy,
+            green: randomStrategy
         }
 
+        // Inject smarter strategy
         strategies[player] = captureSafetyStrategy
 
         const stats = runSimulation(numGames, strategies)
 
-        // Only record wins for the smart player
-        results[player] = stats.wins[player]
-    }
+        const wins = stats.wins[player]
+        const winRate = wins / numGames
+        const winPct = (winRate * 100).toFixed(2)
 
-    return results
+        const baseline = 0.25
+        const advantage = ((winRate - baseline) * 100).toFixed(2)
+
+        const z = calculateZScore(wins, numGames)
+
+        let significance = "❓ Inconclusive"
+        if (z > 2) significance = "✅ Likely better"
+        else if (z < -2) significance = "❌ Likely worse"
+
+        console.log(`\n${player.toUpperCase()} (Smart Strategy):`)
+        console.log(`Wins: ${wins}/${numGames}`)
+        console.log(`Win Rate: ${winPct}%`)
+        console.log(`Advantage vs 25%: ${advantage}%`)
+        console.log(`Z-score: ${z.toFixed(2)} → ${significance}`)
+    }
 }

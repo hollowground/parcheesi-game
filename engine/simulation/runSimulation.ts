@@ -16,10 +16,10 @@ let MODE = "comparison" as "simulation" | "comparison"
 const startTime = new Date()
 
 if (MODE === "simulation") {
-    const stats = runSimulation(50, strategies)
+    const stats = runSimulation(1000, strategies)
     analyzeStats(stats)
 } else {
-    const results = runStrategyComparison(100)
+    const results = runStrategyComparison(10000)
     console.log("\n=== Strategy Comparison ===")
     console.log(results)
 }

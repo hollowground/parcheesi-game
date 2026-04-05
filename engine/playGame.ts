@@ -1,8 +1,13 @@
 import { GameState, PlayerColor } from "../types/GameState"
-import { playTurn } from "./playTurn"
-import { checkWinner } from "./checkWinner"
-import { rollDice } from "./diceUtils"
 import { Strategy } from "./strategies/types"
+
+import {
+    startGame,
+    playAITurn,
+    GameControllerState
+} from "./controller/GameController"
+
+import { checkWinner } from "./checkWinner"
 
 export type GameResult = {
     finalState: GameState
@@ -15,13 +20,13 @@ export function playGame(
     strategies: Partial<Record<PlayerColor, Strategy>>
 ): GameResult {
 
-    let state = initialState
+    let ctrl: GameControllerState = startGame(initialState)
 
-    // ✅ 1. Check BEFORE loop
-    const initialWinner = checkWinner(state)
+    // ✅ Check BEFORE loop (preserve your existing behavior)
+    const initialWinner = checkWinner(ctrl.state)
     if (initialWinner) {
         return {
-            finalState: { ...state, winner: initialWinner },
+            finalState: { ...ctrl.state, winner: initialWinner },
             winner: initialWinner,
             turnCount: 0
         }
@@ -30,37 +35,32 @@ export function playGame(
     let turnCount = 0
     const MAX_TURNS = 1000
 
-    while (!state.winner && turnCount < MAX_TURNS) {
+    while (ctrl.phase !== "GAME_OVER" && turnCount < MAX_TURNS) {
 
-        state = {
-            ...state,
-            dice: rollDice(),
-            usedDice: [],
-        }
+        const player = ctrl.state.currentPlayer
+        const strategy = strategies[player]!
 
-        const strategy = strategies[state.currentPlayer]!
-
-
-        state = playTurn(state, (moves) => {
-            const index = strategy({
+        // 🔥 Adapter: convert your Strategy → controller format
+        const adaptedStrategy = (moves: any[], state: GameState) => {
+            return strategy({
                 state,
-                player: state.currentPlayer,
+                player,
                 moves
             })
-            return moves[index]!
-        })
-
-        const winner = checkWinner(state)
-        if (winner) {
-            return {
-                finalState: { ...state, winner },
-                winner,
-                turnCount
-            }
         }
+
+        ctrl = playAITurn(ctrl, adaptedStrategy)
 
         turnCount++
     }
 
-    throw new Error("Game did not finish within turn limit")
+    if (!ctrl.state.winner) {
+        throw new Error("Game did not finish within turn limit")
+    }
+
+    return {
+        finalState: ctrl.state,
+        winner: ctrl.state.winner,
+        turnCount
+    }
 }
