@@ -40,10 +40,10 @@ export function getEntryMoves(state: GameState): Move[] {
   // only allow remaining capacity
   const capacity = 2 - occupantCount
   //console.log(`Entry square capacity: ${capacity}`)
-  const allowed = startPawns.slice(0, capacity)
+  //const allowed = startPawns.slice(0, capacity)
   //console.log(`Allowed pawns to enter: ${allowed.map(p => p.id).join(", ")}`)
 
-  for (const pawn of allowed) {
+  for (const pawn of startPawns) {
     moves.push({
       pawnId: pawn.id,
       from: pawn.position,

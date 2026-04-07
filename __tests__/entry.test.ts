@@ -12,7 +12,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
 
             currentPlayer: "red",
 
-            dice: [5],
+            dice: [5,2],
             usedDice: [],
 
             pawns: [
@@ -42,7 +42,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
-            dice: [3],
+            dice: [1,3],
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
@@ -64,7 +64,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
-            dice: [5],
+            dice: [5,3],
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
@@ -77,9 +77,9 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         }
 
         const moves = getLegalMoves(state)
-        //console.log(moves)
+        console.log(moves)
 
-        expect(moves.length).toBe(2)
+        expect(moves.length).toBe(4)
     })
 
     it("RULE-ENTRY-001-D: only current player's pawns can enter from start", () => {
@@ -87,7 +87,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "blue",
-            dice: [5],
+            dice: [5,3],
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
@@ -111,7 +111,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
-            dice: [5],
+            dice: [5,2],
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
@@ -164,7 +164,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
         const state: GameState = {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
-            dice: [5],
+            dice: [5,2],
             usedDice: [],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
@@ -189,7 +189,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
             dice: [5],
-            usedDice: [],
+            usedDice: [5],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
 
@@ -214,7 +214,7 @@ describe("Entry Rules (RULE-ENTRY)", () => {
             players: ["red", "blue", "yellow", "green"],
             currentPlayer: "red",
             dice: [5],
-            usedDice: [],
+            usedDice: [2],
             pawns: [
                 { id: 0, player: "red", position: { type: "start" } },
 
