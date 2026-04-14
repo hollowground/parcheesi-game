@@ -4,6 +4,7 @@ import { Move } from "../types/Move"
 import {
     getEnemyPawnsOnSquare,
     getPawnsOnSquare,
+    isBlockade,
     isSafeSquare
 } from "../engine/boardUtils"
 
@@ -39,10 +40,7 @@ export function getMovementMoves(state: GameState): Move[] {
 
             if (destination.type === "track") {
 
-                const occupants = getPawnsOnSquare(state, destination.index)
-
-                // cannot land on blockade
-                if (occupants.length >= 2) continue
+                if (isBlockade(state, destination.index)) continue
 
                 const enemies = getEnemyPawnsOnSquare(
                     state,

@@ -12,7 +12,7 @@ export function getPawnsOnSquare(state: GameState, index: number) {
     )
 }
 
-export function isBlockade(state: GameState, index: number) {
+export function isBlockade(state: GameState, index: number): boolean {
     return getPawnsOnSquare(state, index).length >= 2
 }
 

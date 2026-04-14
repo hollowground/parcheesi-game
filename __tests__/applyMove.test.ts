@@ -100,4 +100,31 @@ describe("Apply Move Rules (RULE-BLOCK)", () => {
 
     })
 
+    it("RULE-MOVE-004: consumes multiple dice when diceUsed is provided", () => {
+        const state: GameState ={
+            players: ["red", "blue"],
+            currentPlayer: "red",       
+            dice: [3, 4],
+            usedDice: [],
+            bonusMoves: [],
+            consecutiveDoubles: 0,
+            pawns: [
+                { id: 1, player: "red", position: { type: "track", index: 10 } },
+            ]
+         }
+
+        const move: Move = {
+            pawnId: 1,
+            diceUsed: [3, 4],
+            distance: 7,
+            from: { type: "track", index: 0 },
+            to: { type: "track", index: 7 }
+        }
+
+        const newState = applyMove(state, move as any)
+
+        expect(newState.dice).toEqual([])
+        expect(newState.usedDice).toEqual([3, 4])
+    })
+
 })

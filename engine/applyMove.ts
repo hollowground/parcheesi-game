@@ -5,10 +5,44 @@ import { getEnemyPawnsOnSquare, isSafeSquare } from "../engine/boardUtils"
 export function applyMove(state: GameState, move: Move): GameState {
 
     const newState = structuredClone(state)
-    // ✅ consume die (ONLY if it's from dice, not bonus)
-    if (state.dice.includes(move.die)) {
-        newState.usedDice.push(move.die)
+
+    /*
+    -----------------------
+    CONSUME DICE (SINGLE SOURCE OF TRUTH)
+    -----------------------
+    */
+
+    // ✅ Multi-dice (combined moves)
+    if (move.diceUsed && move.diceUsed.length > 0) {
+
+        for (const die of move.diceUsed) {
+            const index = newState.dice.findIndex(d => d === die)
+
+            // Only consume if present (prevents bonus like 10/20 from crashing)
+            if (index !== -1) {
+                const [used] = newState.dice.splice(index, 1)
+                newState.usedDice.push(used!)
+            }
+        }
+
     }
+    // ✅ Single die
+    else if (move.die !== undefined) {
+
+        const index = newState.dice.findIndex(d => d === move.die)
+
+        // Only consume if present
+        if (index !== -1) {
+            const [used] = newState.dice.splice(index, 1)
+            newState.usedDice.push(used!)
+        }
+    }
+
+    /*
+    -----------------------
+    MOVE PAWN
+    -----------------------
+    */
 
     const pawn = newState.pawns.find(p => p.id === move.pawnId)
 
@@ -16,15 +50,17 @@ export function applyMove(state: GameState, move: Move): GameState {
         throw new Error(`Pawn ${move.pawnId} not found`)
     }
 
-    // move pawn
     pawn.position = move.to
 
-    // capture check (track only)
+    /*
+    -----------------------
+    CAPTURE LOGIC
+    -----------------------
+    */
+
     if (move.to.type === "track") {
 
         const destinationIndex = move.to.index
-        //console.log(`Pawn ${pawn.id} moved to track index ${destinationIndex}`)
-        //console.log(`Is this a safe square? ${isSafeSquare(destinationIndex)}`)
 
         if (!isSafeSquare(destinationIndex)) {
 
@@ -33,7 +69,6 @@ export function applyMove(state: GameState, move: Move): GameState {
                 destinationIndex,
                 pawn.player
             )
-            //console.log(`Enemies on destination square: ${enemies.map(e => e.id).join(", ")}`)
 
             if (move.capture) {
 
@@ -41,14 +76,22 @@ export function applyMove(state: GameState, move: Move): GameState {
                     enemy.position = { type: "start" }
                 }
 
-                // capture bonus
+                // ✅ Capture bonus
                 newState.bonusMoves.push(20)
-
             }
-
         }
-
     }
+
+    /*
+    -----------------------
+    CAPTURE BONUS (SAFE SQUARE)
+    -----------------------
+    */
+
+    if (move.isBonus === true) {
+        newState.bonusMoves.shift()
+    }
+
     /*
     -----------------------
     HOME BONUS
@@ -56,9 +99,7 @@ export function applyMove(state: GameState, move: Move): GameState {
     */
 
     if (move.to.type === "home") {
-
         newState.bonusMoves.push(10)
-
     }
 
     return newState

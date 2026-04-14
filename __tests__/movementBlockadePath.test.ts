@@ -37,6 +37,7 @@ describe("Movement Rules - Blockade Path", () => {
         }
 
         const moves = getLegalMoves(state)
+        console.log("Legal moves when blockade is in path:", moves)
 
         expect(moves.length).toBe(0)
 
@@ -92,6 +93,7 @@ describe("Movement Rules - Blockade Path", () => {
         }
 
         const moves = getLegalMoves(state)
+        console.log("Legal moves for bonus landing on blockade:", moves)
 
         expect(moves.length).toBe(0)
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { endTurn } from "../engine/endTurn"
 import { GameState } from "../types/GameState"
+import { playTurn } from "../engine/playTurn"
 
 describe("Doubles Rules (RULE-DOUBLES)", () => {
 
@@ -16,10 +17,14 @@ describe("Doubles Rules (RULE-DOUBLES)", () => {
             bonusMoves: [],
             consecutiveDoubles: 0,
 
-            pawns: []
+            pawns: [
+                { id: 1, player: "red", position: { type: "track", index: 10 } },
+
+            ]
         }
 
-        const newState = endTurn(state)
+        const newState = playTurn(state, (moves) => moves[0]!)
+        console.log("State after ending turn with doubles:", JSON.stringify(newState))
 
         expect(newState.currentPlayer).toBe("red")
         expect(newState.consecutiveDoubles).toBe(1)
@@ -33,7 +38,7 @@ describe("Doubles Rules (RULE-DOUBLES)", () => {
             currentPlayer: "red",
 
             dice: [5, 5],
-            usedDice: [5, 5],
+            usedDice: [],
 
             bonusMoves: [],
             consecutiveDoubles: 2,
@@ -44,7 +49,8 @@ describe("Doubles Rules (RULE-DOUBLES)", () => {
             ]
         }
 
-        const newState = endTurn(state)
+        const newState = playTurn(state, (moves) => moves[0]!)
+        console.log("State after ending turn with triple doubles:", JSON.stringify(newState))
 
         const pawn0 = newState.pawns.find(p => p.id === 0)!
         const pawn1 = newState.pawns.find(p => p.id === 1)!

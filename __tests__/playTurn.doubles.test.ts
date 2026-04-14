@@ -22,7 +22,8 @@ describe("PlayTurn - Doubles Behavior", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: true })
+        console.log("Final state after rolling doubles:", finalState)
 
         // ✅ doubles counter should increase
         expect(finalState.consecutiveDoubles).toBe(1)
@@ -38,7 +39,7 @@ describe("PlayTurn - Doubles Behavior", () => {
             players: ["red", "blue"],
             currentPlayer: "red",
 
-            dice: [3, 4], // NOT doubles
+            dice: [3,4], // NOT doubles
             usedDice: [],
 
             bonusMoves: [],
@@ -49,7 +50,8 @@ describe("PlayTurn - Doubles Behavior", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: true })
+        console.log("Final state after rolling non-doubles:", finalState.pawns)
 
         // ❗ should move to next player
         expect(finalState.currentPlayer).toBe("blue")

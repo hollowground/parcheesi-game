@@ -21,7 +21,8 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: false })
+        console.log("Final state after single move:", finalState)
 
         expect(finalState.usedDice).toContain(3)
 
@@ -44,7 +45,7 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: false })
 
         expect(finalState.usedDice).toContain(3)
         expect(finalState.usedDice).toContain(4)
@@ -69,7 +70,7 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: false })
 
         // dice should be consumed before bonus
         expect(finalState.usedDice.length).toBe(2)
@@ -95,7 +96,8 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: false })
+        console.log("Final state after capture with bonus:", finalState)
 
         // ✅ dice must be used
         expect(finalState.usedDice).toContain(3)
@@ -124,8 +126,8 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!)
-        //console.log("Final state after attempting bonus:", JSON.stringify(finalState))
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: false })
+        console.log("Final state after attempting bonus:", JSON.stringify(finalState))
 
         // ❗ bonus must be cleared
         expect(finalState.bonusMoves.length).toBe(0)
@@ -162,7 +164,7 @@ describe("PlayTurn Rules (RULE-PLAYTURN)", () => {
             if (captureMove) return captureMove
 
             return moves.find(m => m.pawnId === 2)! // force bonus on different pawn
-        })
+        },{ autoEndTurn: false })
 
         // Pawn 2 should have moved via bonus
         const pawn2 = finalState.pawns.find(p => p.id === 2)!

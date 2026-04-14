@@ -3,6 +3,7 @@ import { Move } from "../types/Move"
 
 import { getEntryMoves } from "../rules/entryRules"
 import { getMovementMoves } from "../rules/movementRules"
+import { getBonusMoves } from "../rules/bonusRules"
 import { getAvailableDice } from "./diceUtils"
 
 export function getLegalMoves(state: GameState): Move[] {
@@ -57,5 +58,8 @@ function generateMovesForDice(state: GameState, dice: number[]): Move[] {
     usedDice: []
   }
 
-  return getMovementMoves(tempState)
+  return [
+  ...getMovementMoves(tempState),
+  ...getBonusMoves(tempState)
+]
 }
