@@ -25,13 +25,25 @@ export function startGame(initialState: GameState): GameControllerState {
     }
 }
 
+// -------------------------
+// 🎲 ROLL DICE
+// -------------------------
 export function rollDiceStep(ctrl: GameControllerState): GameControllerState {
     if (ctrl.phase !== "ROLL_DICE") return ctrl
 
-    const newState = {
+    const dice = rollDice()
+
+    const isDoubles =
+        dice.length === 2 &&
+        dice[0] === dice[1]
+
+    const newState: GameState = {
         ...ctrl.state,
-        dice: rollDice(),
-        usedDice: []
+        dice,
+        usedDice: [],
+        consecutiveDoubles: isDoubles
+            ? ctrl.state.consecutiveDoubles + 1
+            : 0
     }
 
     const legalMoves = getLegalMoves(newState)
@@ -43,20 +55,41 @@ export function rollDiceStep(ctrl: GameControllerState): GameControllerState {
     }
 }
 
+// -------------------------
+// ♟️ APPLY MOVE
+// -------------------------
 export function applyMoveStep(
     ctrl: GameControllerState,
     move: Move
 ): GameControllerState {
     if (ctrl.phase !== "SELECT_MOVE") return ctrl
 
-    const newState = applyMove(ctrl.state, move)
+    let newState = applyMove(ctrl.state, move)
+
+    // Remaining dice = dice - usedDice
+    const remainingDice = newState.dice.filter(
+        d => !newState.usedDice.includes(d)
+    )
+
     const legalMoves = getLegalMoves(newState)
 
+    // ✅ If moves still possible → continue turn
     if (legalMoves.length > 0) {
         return {
             state: newState,
             phase: "SELECT_MOVE",
             legalMoves
+        }
+    }
+
+    // ❗ No moves left BUT dice remain → forfeit dice
+    if (remainingDice.length > 0) {
+        console.log("Forfeiting remaining dice:", remainingDice)
+
+        newState = {
+            ...newState,
+            dice: [],
+            usedDice: []
         }
     }
 
@@ -67,6 +100,9 @@ export function applyMoveStep(
     }
 }
 
+// -------------------------
+// 🔄 END TURN
+// -------------------------
 export function endTurnStep(ctrl: GameControllerState): GameControllerState {
     if (ctrl.phase !== "TURN_END") return ctrl
 
@@ -80,6 +116,23 @@ export function endTurnStep(ctrl: GameControllerState): GameControllerState {
         }
     }
 
+    const rolledDoubles = ctrl.state.consecutiveDoubles > 0
+
+    if (rolledDoubles) {
+        console.log("🎯 Doubles rolled → same player goes again")
+
+        return {
+            state: {
+                ...ctrl.state,
+                dice: [],
+                usedDice: []
+            },
+            phase: "ROLL_DICE",
+            legalMoves: []
+        }
+    }
+
+    // 🔁 NORMAL TURN → NEXT PLAYER
     const nextPlayer = getNextPlayer(ctrl.state)
 
     return {
@@ -87,7 +140,8 @@ export function endTurnStep(ctrl: GameControllerState): GameControllerState {
             ...ctrl.state,
             currentPlayer: nextPlayer,
             dice: [],
-            usedDice: []
+            usedDice: [],
+            consecutiveDoubles: 0
         },
         phase: "ROLL_DICE",
         legalMoves: []
@@ -100,6 +154,9 @@ function getNextPlayer(state: GameState): PlayerColor {
     return players[(idx + 1) % players.length]!
 }
 
+// -------------------------
+// 🤖 AI TURN
+// -------------------------
 export function playAITurn(
     ctrl: GameControllerState,
     strategy: (moves: Move[], state: GameState) => number
@@ -117,7 +174,7 @@ export function playAITurn(
         current = applyMoveStep(current, move)
     }
 
-    // End turn
+    // End turn (handles doubles internally now)
     current = endTurnStep(current)
 
     return current

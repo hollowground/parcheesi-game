@@ -20,7 +20,7 @@ export function getLegalMoves(state: GameState): Move[] {
   const remainingDice = getAvailableDice(state)
 
   if (remainingDice.length > 0) {
-    //console.log(`Using dice: ${remainingDice.join(", ")}`)
+    console.log(`Using dice: ${remainingDice.join(", ")}`)
     return generateMovesForDice(state, remainingDice)
   }
 
@@ -57,6 +57,7 @@ function generateMovesForDice(state: GameState, dice: number[]): Move[] {
     dice,
     usedDice: []
   }
+  console.log("Generating moves for dice:", dice.join(", "))
 
   return [
   ...getMovementMoves(tempState),

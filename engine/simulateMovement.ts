@@ -27,6 +27,10 @@ export function simulateMovement(
 
         pos = next
     }
+    // cannot land on blockade
+    if (pos.type === "track" && isBlockade(state, pos.index)) {
+        return null
+    }
 
     return pos
 }

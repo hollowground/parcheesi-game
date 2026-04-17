@@ -8,7 +8,10 @@ import { checkWinner } from "./checkWinner"
 export function playTurn(
     state: GameState,
     chooseMove: (moves: Move[], state: GameState) => Move,
-    options?: { autoEndTurn?: boolean }
+    options?: {
+        autoEndTurn?: boolean
+        stopAfterDiceSetup?: boolean
+    }
 ): GameState {
 
     let currentState = structuredClone(state)
@@ -72,13 +75,56 @@ export function playTurn(
         return endTurn(currentState)
     }
 
+    // -------------------------
+    // DOUBLETS BONUS
+    // -------------------------
+    const allPawnsOut = currentState.pawns
+        .filter(p => p.player === currentState.currentPlayer)
+        .every(p => p.position.type !== "start")
+
+
+    if (isDoubles && allPawnsOut) {
+        const die = currentState.dice[0]!
+        const opposite = 7 - die
+
+        currentState.dice = [die, die, opposite, opposite]
+        currentState.usedDice = []
+
+        console.log("Doublets bonus applied:", currentState.dice)
+
+        if (options?.stopAfterDiceSetup) {
+            return currentState
+        }
+
+        // ✅ NEW: enforce "must use all 4 or none"
+        const canUseAll = canPlayAllDice(currentState)
+        console.log("Checking if all dice playable:", currentState.dice)
+        console.log("Can play all dice:", canUseAll)
+
+        if (!canUseAll) {
+            console.log("Cannot play all 4 parts of doublets → forfeiting turn")
+
+            // ❗ No movement allowed at all
+            currentState.usedDice = []
+            currentState.bonusMoves = []
+
+            if (options?.autoEndTurn) {
+                return endTurn(currentState)
+            }
+
+            return currentState
+        }
+    }
+
     console.log("Starting turn for player:", currentState.currentPlayer)
     console.log("Bonus moves:", currentState.bonusMoves.join(", "))
+    console.log("Dice:", currentState.dice)
+    console.log("Used:", currentState.usedDice)
 
     // -------------------------
     // PHASE 1: USE ALL DICE
     // -------------------------
-    while (currentState.dice.length >= currentState.usedDice.length) {
+    while (currentState.dice.length > 0) {
 
         const moves = getLegalMoves(currentState)
         console.log(`Legal moves available for dice: ${moves.length}`)
@@ -94,7 +140,14 @@ export function playTurn(
 
         currentState = applyMove(currentState, move)
         console.log("State after move:", currentState)
+        console.log("Dice left:", currentState.dice.filter(d => !currentState.usedDice.includes(d)).join(", "))
 
+
+    }
+
+    if (currentState.dice.length > 0) {
+        console.log("Forfeiting remaining dice:", currentState.dice)
+        currentState.dice = []
     }
 
     // -------------------------
@@ -150,4 +203,71 @@ export function playTurn(
     // -------------------------
     return currentState
 
+}
+
+function canPlayAllDice(state: GameState): boolean {
+
+    const visited = new Set<string>()
+
+    function serialize(s: GameState): string {
+
+        // ✅ derive remaining dice (order-independent)
+        const remainingDice = [...s.dice]
+
+        for (const used of s.usedDice) {
+            const index = remainingDice.indexOf(used)
+            if (index !== -1) {
+                remainingDice.splice(index, 1)
+            }
+        }
+
+        remainingDice.sort() // normalize order
+
+        return JSON.stringify({
+            remainingDice,
+            pawns: s.pawns.map(p => ({
+                id: p.id,
+                pos: p.position
+            }))
+        })
+    }
+
+    function dfs(simState: GameState): boolean {
+
+        const key = serialize(simState)
+
+        if (visited.has(key)) {
+            return false
+        }
+        visited.add(key)
+
+        if (simState.usedDice.length === simState.dice.length) {
+            return true
+        }
+
+        const moves = getLegalMoves(simState)
+        const diceMoves = moves.filter(m => !m.isBonus)
+
+        if (diceMoves.length === 0) {
+            return false
+        }
+
+        for (const move of diceMoves) {
+            const nextState = structuredClone(simState)
+
+            // 🔥 restore full dice set before applying move
+            nextState.dice = [...state.dice] // original dice from root
+
+            // apply move
+            const applied = applyMove(nextState, move)
+
+            if (dfs(nextState)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    return dfs(structuredClone(state))
 }

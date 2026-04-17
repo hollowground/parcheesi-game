@@ -22,7 +22,7 @@ describe("PlayTurn - Doubles Behavior", () => {
             ]
         }
 
-        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: true })
+        const finalState = playTurn(state, (moves) => moves[0]!,{ autoEndTurn: false })
         console.log("Final state after rolling doubles:", finalState)
 
         // ✅ doubles counter should increase
